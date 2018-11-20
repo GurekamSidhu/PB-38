@@ -23,7 +23,7 @@ def init_model_command():
 def init_app(app):
     app.cli.add_command(init_model_command)
 
-@bp.route('/entertraits', methods=('GET', 'POST'))
+@bp.route('/', methods=('GET', 'POST'))
 def entertraits():
     if request.method == 'POST':
         age = float(request.form['age'])
