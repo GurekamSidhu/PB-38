@@ -60,7 +60,6 @@ def entertraits():
             predicted_price = percep.predict_price(age, sex, bmi, children, smoker, ne, nw, se, sw)
             return redirect(url_for('serve.showprice', price=predicted_price))
         
-        
         flash(error)
         
     return render_template('entertraits.html')
