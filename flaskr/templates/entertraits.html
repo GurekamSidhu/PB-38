@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Enter traits{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="age">Age</label>
+        <input name="age" id="age" required>
+        <label for="sex">Sex (1 for male 2 for female)</label>
+        <input name="sex" id="sex" required>
+        <label for="bmi">BMI</label>
+        <input name="bmi" id="bmi" required>
+        <label for="children">Children</label>
+        <input name="children" id="children" required>
+        <label for="smoker">Smoker (1 for yes -1 for no)</label>
+        <input name="smoker" id="smoker" required>
+        <label for="ne">Northeast (1 for yes 0 for no)</label>
+        <input name="ne" id="ne" required>
+        <label for="nw">Northwest (1 for yes 0 for no)</label>
+        <input name="nw" id="nw" required>
+        <label for="se">Southeast (1 for yes 0 for no)</label>
+        <input name="se" id="se" required>
+        <label for="sw">Southwest (1 for yes 0 for no)</label>
+        <input name="sw" id="sw" required>
+        <input type="submit" value="Get Price">
+    </form>
+{% endblock %}

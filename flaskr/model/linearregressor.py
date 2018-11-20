@@ -22,7 +22,7 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 pd.options.display.max_rows = 10
 pd.options.display.float_format = '{:.1f}'.format
 
-medical_dataframe = pd.read_csv("/Users/garrysidhu/Documents/Year 4 Sem 1/ELEC 491/mlcc-exercises/PB-38/data/insurance.csv", sep=",")
+medical_dataframe = pd.read_csv("../data/insurance.csv", sep=",")
 
 medical_dataframe = medical_dataframe.reindex(
     np.random.permutation(medical_dataframe.index))
