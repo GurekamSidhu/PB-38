@@ -83,9 +83,7 @@ class Perceptron:
 
     def predict_price(self, age, sex, bmi, children, smoker, ne, nw, se, sw):
         input_features = [[age, sex, bmi, children, smoker, ne, nw, se, sw]]
-        predicted_price = self.perceptron.predict(input_features)
-        print("Predicted charge: $", predicted_price)
-        return predicted_price
+        return self.perceptron.predict(input_features)
 
     # for testing in console
     def predict_price_console(self):

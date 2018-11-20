@@ -24,6 +24,8 @@ def create_app(test_config=None):
     #     pass
 
     serve.init_app(app)
+    
+    app.register_blueprint(serve.bp)
 
     @app.route('/hello')
     def hello():

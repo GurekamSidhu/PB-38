@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Your price{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <h1>Your suggested price is: {{ price }}</h1>
+{% endblock %}
