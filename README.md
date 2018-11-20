@@ -6,13 +6,19 @@ Price Setting API
 
 Setup and run server (on windows)
 
-Install flask
+From /PB-38
+
+Install dependencies
 
 ```
-pip install flask
+pip install -r requirements.txt
 ```
 
-Navigate to /PB-38
+If you are adding more dependencies
+
+```
+pip freeze > requirements.txt
+```
 
 Linux and Mac:
 
