@@ -15,4 +15,7 @@ build/
 .venv
 venv/
 
+# VS code
+.vscode
+
 receipts.bson
