@@ -93,6 +93,7 @@ labels = np.array(labels).astype(float)
 
 
 reg = LinearRegression().fit(features,labels)
+print(features[0])
 print(reg.score(features, labels))
 predictions = reg.predict(features)
 

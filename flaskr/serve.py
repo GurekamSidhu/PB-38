@@ -4,15 +4,14 @@ import functools
 from flask import (Blueprint, render_template, flash, request, redirect, url_for)
 from flask import current_app as app
 from flask.cli import with_appcontext
-from .model.nnscikit import Perceptron
+from .model.receiptsmodel import ReceiptsModel
 
 def init_model():
-    percep = Perceptron()
-    percep.run_regress((8,5))
-    return percep
+    model = ReceiptsModel()
+    return model
 
 bp = Blueprint('serve', __name__, url_prefix='')
-percep = init_model()
+model = init_model()
 
 @click.command('init-model')
 @with_appcontext
@@ -26,38 +25,21 @@ def init_app(app):
 @bp.route('/', methods=('GET', 'POST'))
 def entertraits():
     if request.method == 'POST':
-        age = float(request.form['age'])
-        sex = float(request.form['sex'])
-        bmi = float(request.form['bmi'])
-        children = float(request.form['children'])
-        smoker = float(request.form['smoker'])
-        ne = float(request.form['ne'])
-        nw = float(request.form['nw'])
-        se = float(request.form['se'])
-        sw = float(request.form['sw'])
         error = None
+        duration = None
+        try:
+            duration = float(request.form['duration'])
+        except ValueError:
+            error = 'Duration must be a number'
+        speciality = int(request.form['speciality'])
+        event_type = int(request.form['eventType'])
+        typ = int(request.form['type'])
 
-        if age == None:
-            error = 'Age is required'
-        elif sex == None:
-            error = 'Sex is required'
-        elif bmi == None:
-            error = 'BMI is required'
-        elif children == None:
-            error = 'Children is required'
-        elif smoker == None:
-            error = 'Smoker is required'
-        elif ne == None:
-            error = 'NE is required'
-        elif nw == None:
-            error = 'NW is required'
-        elif se == None:
-            error = 'SE is required'
-        elif sw == None:
-            error = 'SW is required'
+        if duration == None and error is None:
+            error = 'Duration is required'
 
         if error is None:
-            predicted_price = percep.predict_price(age, sex, bmi, children, smoker, ne, nw, se, sw)
+            predicted_price = model.predict_price(duration, speciality, event_type, typ)
             return redirect(url_for('serve.showprice', price=predicted_price))
         
         flash(error)
