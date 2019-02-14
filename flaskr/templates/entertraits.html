@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title %}Enter traits{% endblock %}</h1>
+    <h1>{% block title %}Enter receipt data{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -32,12 +32,14 @@
         </select>
         <label for="type">Type</label>
         <select name = "type">
-            <option value="1">001</option>
-            <option value="3">003</option>
-            <option value="2">004</option>
-            <option value="0">005</option>
-            <option value="5">006</option>
-            <option value="4">007</option>
+            <option value="1">Consulatation Video</option>
+            <option value="3">Consultation Email</option>
+            <option value="2">Consulatation Report</option>
+            <option value="0">Counseling Video</option>
+            <option value="5">Conseling Voice</option>
+            <option value="4">Conseling Email</option>
+            <!-- <option value="we'll see">Consultation Voice</option> -->
+            <!-- <option value="we'll see">Conseling Report</option> -->
         </select>
         <input type="submit" value="Get Price">
     </form>
