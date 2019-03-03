@@ -1,45 +1,45 @@
-import pickle as pkl
-import random
-import os
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.metrics import mean_squared_error
-from sklearn.linear_model import LinearRegression
-from dateutil import parser
 import bson
+import numpy as np
 import json
-
-random.seed()
+from dateutil import parser
 
 with open('./receipts.bson','rb') as datafile:
     data = bson.decode_all(datafile.read())
+
+features = []
+labels = []
+
+spa = {}
 
 with open('./receipts-dict.json', 'r') as dictfile:
     obj = json.loads(dictfile.read())
     specialties = obj['specialties']
     eventTypes = obj['eventTypes']
     types = obj['types']
-
-features = []
-labels = []
-
-random.shuffle(data)
-
+    
 for row in data:
     price = (int)((float)(row['price']))        
     labels.append(price)
     row['price'] = price
+    if(row['specialty'] in spa):
+        spa[row['specialty']] += 1
+    else:
+        spa[row['specialty']] = 1
 
-labels.sort()
+print(spa)
+
+    
 q1 = labels[(int)(len(labels)/4)]
 q2 = labels[(int)(len(labels)/2)]
 q3 = labels[(int)(3*len(labels)/4)]
 tlo = q1 - 1.5*(q3-q1)
 thi = q3 + 1.5*(q3-q1)
 
-
-labels = []
-
+drv = []
+spv = []
+evv = []
+tpv = []
+prv = []
 
 for row in data:
     try:
@@ -71,6 +71,8 @@ for row in data:
         print('Event type "' + row['type'] + '" not mapped')
         print('Run receipts-dict-gen.py or add ' + row['eventType'] + ' to receipts-dict.json manually')
         exit(1)
+    prv.append(row['price'])
+    drv.append(duration/60)
     speciality[specialties[row['specialty']]] = 1
     typ = np.zeros(len(types), dtype=int)
     typ[types[row['type']]] = 1
@@ -82,37 +84,19 @@ for row in data:
     features.append(vector)
     labels.append(row['price'])
 
-print((str)(len(features)) + " usable training entries")
+print(prv)
 
-training_epochs = 50000
+prv = np.asarray(prv)
+drv = np.asarray(drv)
 
-labels = np.array(labels).astype(float)
-
-fakedata_file = '../data/receipts-fake.json'
-if(os.path.exists(fakedata_file)):
-    with open(fakedata_file, 'r') as fakefile:
-        fileobj = json.loads(fakefile.read())
-        fakedata = fileobj['features']
-        fakeprices = fileobj['labels']
-        labels = np.concatenate((labels, fakeprices))
-        features = np.concatenate((features, fakedata))
-        
-    print("Plus " + (str)(len(fakedata)) + " fake entries")
-
-print(len(labels), len(features))
-
-reg = LinearRegression().fit(features,labels)
-print(reg.score(features, labels))
-predictions = reg.predict(features)
-print(mean_squared_error(labels, predictions))
-
-model_file = './receipts-model.pkl'
-
-with open(model_file, 'wb') as dumpfile:
-    pkl.dump(reg, dumpfile)
-    print("Created new model at " + model_file)
-
-
+print(len(prv),len(drv))
+print(np.mean(prv), np.mean(drv))
+print(np.std(prv), np.std(drv))
+print(np.min(prv), np.min(drv))
+print(np.quantile(prv,0.25), np.quantile(drv,0.25))
+print(np.quantile(prv,0.50), np.quantile(drv,0.50))
+print(np.quantile(prv,0.75), np.quantile(drv,0.75))
+print(np.quantile(prv,1.0), np.quantile(drv,1.0))
 
 ##fig, ax = plt.subplots()
 ##ax.scatter(labels, predictions)
