@@ -94,3 +94,6 @@ class ReceiptsModel:
         vector = np.concatenate((duration_vector, speciality_vector, event_type_vector, type_vector))
         features[0] = vector
         return self.reg.predict(features)
+
+model = ReceiptsModel()
+print(model)
