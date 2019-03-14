@@ -1,7 +1,8 @@
 import os
 
 from flask import Flask
-from . import serve
+from .api.api import api_blueprint
+from .serve import app_blueprint
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -22,9 +23,8 @@ def create_app(test_config=None):
     #     os.makedirs(app.instance_path)
     # except OSError:
     #     pass
-
-    serve.init_app(app)
     
-    app.register_blueprint(serve.bp)
+    app.register_blueprint(api_blueprint)
+    app.register_blueprint(app_blueprint)
 
     return app
