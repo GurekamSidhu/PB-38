@@ -31,8 +31,8 @@ class TraitsForm(Form):
 	for i in range (0, len(visit_types)):
 		visits.append((i + 1, visit_types[i]))
 
-	duration 	= IntegerField('Duration')
-	speciality 	= SelectField('Specialities', choices=specialities)
+	duration 	= IntegerField('Duration')				# Must be greater than 0
+	speciality 	= SelectField('Specialities', choices=specialities)	
 	event_type 	= SelectField('Event Type', choices=events)
 	visit_type 	= SelectField('Visit Type', choices=visits)
 

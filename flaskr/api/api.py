@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, request, render_template
 from flask_restful import Resource, Api
 from webargs.flaskparser import parser, abort						# To parse arguments
-from webargs import fields, validate								# To validate arguments
+from webargs import fields, validate							# To validate arguments
 
 from ..model.receiptsmodel import ReceiptsModel 					# Model to query
 
@@ -17,6 +17,7 @@ API ENDPOINTS
 class Price(Resource):
 	def get(self):
 		''' Get predicted price for given parameters '''
+		''' Returns 400 error if invalid parameters '''
 		args = self.get_request_parameters(request)
 		price = model.predict_price(args['duration'], args['speciality'], args['eventType'], args['type'])
 		return {'price': price[0]}
@@ -36,7 +37,6 @@ class Price(Resource):
 api.add_resource(Price, '/calculate')
 
 
-# This error handler is necessary for usage with Flask-RESTful
 @parser.error_handler
 def handle_request_parsing_error(err, req, schema, error_status_code, error_headers):
     """webargs error handler that uses Flask-RESTful's abort function to return

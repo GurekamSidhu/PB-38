@@ -18,12 +18,7 @@ def create_app(test_config=None):
         # test_config can be passed and used instead of instance config
         app.config.from_mapping(test_config)
 
-    # if we need app.instance_path
-    # try:
-    #     os.makedirs(app.instance_path)
-    # except OSError:
-    #     pass
-    
+	# Register blueprints 
     app.register_blueprint(api_blueprint)
     app.register_blueprint(app_blueprint)
 
