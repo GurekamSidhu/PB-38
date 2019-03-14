@@ -1,15 +1,11 @@
 {% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
-{% block header %}
-    <h1>{% block title %}Enter receipt data{% endblock %}</h1>
-{% endblock %}
 
 {% block content %}
-    <form method="post">
-        <div>{{form.duration.label}} : {{form.duration()}}</div>
-        <div>{{form.speciality.label}} : {{form.speciality()}}</div>
-        <div>{{form.event_type.label}} : {{form.event_type()}}</div>
-        <div>{{form.visit_type.label}} : {{form.visit_type()}}</div>
-        <input type="submit" value="Get Price">
-    </form>
+<div class="wrapper">
+	<div class="input-form">
+		{{ wtf.quick_form(form, method="post", button_map={"submit":"btn btn-block"}) }}
+	</div>
+</div>
 {% endblock %}

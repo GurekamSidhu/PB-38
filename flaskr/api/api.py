@@ -9,6 +9,7 @@ from ..model.receiptsmodel import ReceiptsModel 					# Model to query
 api_blueprint = Blueprint('api', 'api', url_prefix='/api')
 api = Api(api_blueprint)
 
+
 model = ReceiptsModel()
 
 """
