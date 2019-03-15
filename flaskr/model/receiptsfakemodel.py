@@ -93,7 +93,7 @@ class ReceiptsModel:
 
         labels = np.array(labels).astype(float)
 
-        fakedata_file = './bin/receipts-fake.json'
+        fakedata_file = home + '/capstone/PB-38/bin/receipts-fake.json'
         if(os.path.exists(fakedata_file)):
             with open(fakedata_file, 'r') as fakefile:
                 fileobj = json.loads(fakefile.read())
