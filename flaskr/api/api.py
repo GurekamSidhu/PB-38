@@ -21,7 +21,7 @@ class Retrain(Resource):
 	def get(self):
 		''' Retrains the model'''
 		model = ReceiptsModel()
-		if model not None:
+		if model is not None:
 			return 1
 		else:
 			return 0
