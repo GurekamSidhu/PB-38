@@ -21,7 +21,10 @@ class Retrain(Resource):
 	def get(self):
 		''' Retrains the model'''
 		model = ReceiptsModel()
-		return {'trainedAt': str(datetime.datetime.now())}
+		if model not None:
+			return 1
+		else:
+			return 0
 
 api.add_resource(Retrain, '/retrain')
 
