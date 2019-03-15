@@ -5,6 +5,8 @@ from webargs import fields, validate							# To validate arguments
 
 from ..model.receiptsfakemodel import ReceiptsModel 					# Model to query
 
+import datetime
+
 # Register blueprint
 api_blueprint = Blueprint('api', 'api', url_prefix='/api')
 api = Api(api_blueprint)
@@ -19,6 +21,7 @@ class Retrain(Resource):
 	def get(self):
 		''' Retrains the model'''
 		model = ReceiptsModel()
+		return {'trainedAt': datetime.datetime.now()}
 
 api.add_resource(Retrain, '/retrain')
 
