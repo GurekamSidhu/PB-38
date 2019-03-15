@@ -118,7 +118,7 @@ class ReceiptsModel:
             print("Created new model at " + model_file)
 
     def predict_price(self, duration, speciality, eventType, typ):
-        features = np.zeros((1,23))
+        features = np.zeros((1,22))
         duration_vector = np.asarray([duration])
         speciality_vector = np.zeros(self.speciality_length, dtype=int)
         speciality_vector[speciality] = 1
