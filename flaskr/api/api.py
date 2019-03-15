@@ -3,7 +3,7 @@ from flask_restful import Resource, Api
 from webargs.flaskparser import parser, abort						# To parse arguments
 from webargs import fields, validate							# To validate arguments
 
-from ..model.receiptsmodel import ReceiptsModel 					# Model to query
+from ..model.receiptsfakemodel import ReceiptsModel 					# Model to query
 
 # Register blueprint
 api_blueprint = Blueprint('api', 'api', url_prefix='/api')
@@ -15,6 +15,13 @@ model = ReceiptsModel()
 """
 API ENDPOINTS
 """
+class Retrain(Resource):
+	def get(self):
+		''' Retrains the model'''
+		model = ReceiptsModel()
+
+api.add_resource(Retrain, '/retrain')
+
 class Price(Resource):
 	def get(self):
 		''' Get predicted price for given parameters '''
@@ -32,11 +39,8 @@ class Price(Resource):
 			"type" : fields.Int(validate=lambda val: val > 0),
 		}
 		return parser.parse(request_args, data)
-
-	
-			
+		
 api.add_resource(Price, '/calculate')
-
 
 @parser.error_handler
 def handle_request_parsing_error(err, req, schema, error_status_code, error_headers):

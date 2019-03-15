@@ -11,7 +11,9 @@ class ReceiptsModel:
     def __init__(self):
         random.seed()
 
-        with open('data/receipts.bson','rb') as file:
+        home = os.getenv("HOME")
+
+        with open(home + '/dump/porton/receipts.bson','rb') as file:
             data = bson.decode_all(file.read())
 
         features = []

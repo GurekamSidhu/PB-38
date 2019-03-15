@@ -11,7 +11,7 @@ class Perceptron:
     def __init__(self):
         random.seed()
 
-        with open('data/insurance.p','rb') as file:
+        with open('bin/insurance.p','rb') as file:
             samples = pkl.load(file)
 
         training_epochs = 5000
@@ -100,11 +100,5 @@ class Perceptron:
         input_features = [[age, sex, bmi, children, smoker, ne, nw, se, sw]]
         output_prediction = self.perceptron.predict(input_features)
         print("Predicted charge: $", output_prediction)
-
-#test_multilayer_sizes();
-#test_layer_sizes();
-# percep = Perceptron()
-# percep.run_regress((8,5))
-# percep.predict_price()
 
 
