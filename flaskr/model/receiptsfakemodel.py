@@ -114,7 +114,7 @@ class ReceiptsModel:
         model_file = home + '/capstone/PB-38/bin/receipts-model.pkl'
 
         with open(model_file, 'wb') as dumpfile:
-            pkl.dump(reg, dumpfile)
+            pkl.dump(self.reg, dumpfile)
             print("Created new model at " + model_file)
 
     def predict_price(self, duration, speciality, eventType, typ):
