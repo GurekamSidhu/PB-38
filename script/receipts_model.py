@@ -8,6 +8,7 @@ from sklearn.linear_model import LinearRegression
 from dateutil import parser
 import bson
 import json
+import receipts_dict_gen
 
 random.seed()
 
@@ -16,11 +17,11 @@ home = os.getenv("HOME")
 with open(home + '/dump/porton/receipts.bson','rb') as datafile:
     data = bson.decode_all(datafile.read())
 
-with open(home + '/dynprice/bin/receipts-dict.json', 'r') as dictfile:
-    obj = json.loads(dictfile.read())
-    specialties = obj['specialties']
-    eventTypes = obj['eventTypes']
-    types = obj['types']
+with open('../receipts_schema.json','r') as schemafile:
+    schema = json.loads(schemafile.read())
+
+with open(home + '/dynprice/bin/receipts_dict.json', 'r') as dictfile:
+    dicts = json.loads(dictfile.read())
 
 features = []
 labels = []
@@ -42,7 +43,6 @@ thi = q3 + 1.5*(q3-q1)
 
 labels = []
 
-
 for row in data:
     try:
         np.array([row['price']]).astype(float)
@@ -56,30 +56,30 @@ for row in data:
         continue
     if(row['price'] < tlo or row['price'] > thi):
         continue
-    if(row['specialty'] == None):
-        continue
     
     vector = np.asarray([duration])
-    speciality = np.zeros(len(specialties), dtype=int)
-    if(row['specialty'] not in specialties):
-        print('Specialty "' + row['specialty'] + '" not mapped')
-        print('Run receipts-dict-gen.py or add ' + row['type'] + ' to receipts-dict.json manually')
-        exit(1)
-    if(row['type'] not in types):
-        print('Type "' + row['type'] + '" not mapped')
-        print('Run receipts-dict-gen.py or add ' + row['type'] + ' to receipts-dict.json manually')
-        exit(1)
-    if(row['eventType'] not in eventTypes):
-        print('Event type "' + row['type'] + '" not mapped')
-        print('Run receipts-dict-gen.py or add ' + row['eventType'] + ' to receipts-dict.json manually')
-        exit(1)
-    speciality[specialties[row['specialty']]] = 1
-    typ = np.zeros(len(types), dtype=int)
-    typ[types[row['type']]] = 1
-    eventType = np.zeros(len(eventTypes), dtype=int)
-    eventType[eventTypes[row['eventType']]] = 1
-    
-    vector = np.concatenate((vector, speciality,eventType,typ))
+    vector = [duration]
+    skip = False
+    for datatype in schema:
+        if(schema[datatype] == 'class'):
+            if(row[datatype] == None):
+                skip = True
+                break
+            if(row[datatype] not in dicts[datatype]):
+                print(datatype + ' "' + row['specialty'] + '" not mapped')
+                exit(1)
+            classvector = np.zeros(len(dicts[datatype]), dtype=int)
+            classvector[dicts[datatype][row[datatype]]] = 1
+            vector = np.concatenate((vector, classvector))
+        elif(schema[datatype] == 'number'):
+            num = [(float)(row[datatype])]
+            vector = np.concatenate((vector, num))
+        else:
+            print("Unknown feature type " + datatype + ", " + schema[datatype])
+            print("Should be 'class' or 'number'")
+            exit(1)
+    if(skip):
+        continue
     
     features.append(vector)
     labels.append(row['price'])
@@ -90,7 +90,7 @@ training_epochs = 50000
 
 labels = np.array(labels).astype(float)
 
-fakedata_file = '../bin/receipts-fake.json'
+fakedata_file = '../bin/receipts_fake.json'
 if(os.path.exists(fakedata_file)):
     with open(fakedata_file, 'r') as fakefile:
         fileobj = json.loads(fakefile.read())
@@ -108,7 +108,7 @@ print(reg.score(features, labels))
 predictions = reg.predict(features)
 print(mean_squared_error(labels, predictions))
 
-model_file = home + '/dynprice/bin/receipts-model.pkl'
+model_file = home + '/dynprice/bin/receipts_model.pkl'
 
 with open(model_file, 'wb') as dumpfile:
     pkl.dump(reg, dumpfile)

@@ -13,11 +13,11 @@ home = os.getenv("HOME")
 with open(home + '/dump/porton/receipts.bson','rb') as infile:
     data = bson.decode_all(infile.read())
 
-with open('../bin/receipts-dict.json', 'r') as dictfile:
+with open('../bin/receipts_dict.json', 'r') as dictfile:
     obj = json.loads(dictfile.read())
-    specialties = obj['specialties']
-    eventTypes = obj['eventTypes']
-    types = obj['types']
+    specialties = obj['specialty']
+    eventTypes = obj['eventType']
+    types = obj['type']
 
 
 newsize = 500
@@ -26,7 +26,7 @@ newentries = []
 features = []
 labels = []
     
-model_file = '../bin/receipts-model.pkl'
+model_file = '../bin/receipts_model.pkl'
 with open(model_file, 'rb') as dumpfile:
     reg = pkl.load(dumpfile)
 
@@ -74,7 +74,7 @@ fileobj = {
             'features': newentries,
             'labels': prices
         }
-fakefile = '../bin/receipts-fake.json'
+fakefile = '../bin/receipts_fake.json'
 with open(fakefile, 'w') as outfile:
     outfile.write(json.dumps(fileobj))
     print((str)(newsize) + " fake entries created in " + fakefile)
