@@ -42,7 +42,8 @@ class Price(Resource):
 		''' Get predicted price for given parameters '''
 		''' Returns 400 error if invalid parameters '''
 		args = self.get_request_parameters(request)
-		price = model.predict_price(args['duration'], args['speciality'], args['eventType'], args['type'])
+		features = format_features(args['duration'], args['speciality'], args['eventType'], args['type'])
+		price = model.predict(features)
 		return {'price': price[0]}
 
 	def get_request_parameters(self, data):
@@ -56,6 +57,19 @@ class Price(Resource):
 		return parser.parse(request_args, data)
 		
 api.add_resource(Price, '/calculate')
+
+def format_features(duration, speciality, eventType, typ):
+	features = np.zeros((1,23))
+    duration_vector = np.asarray([duration])
+    speciality_vector = np.zeros(self.speciality_length, dtype=int)
+    speciality_vector[speciality] = 1
+    event_type_vector = np.zeros(self.event_type_length, dtype=int)
+    event_type_vector[eventType] = 1
+    type_vector = np.zeros(self.type_length, dtype=int)
+    type_vector[typ] = 1
+    vector = np.concatenate((duration_vector, speciality_vector, event_type_vector, type_vector))
+    features[0] = vector
+	return features
 
 @parser.error_handler
 def handle_request_parsing_error(err, req, schema, error_status_code, error_headers):
