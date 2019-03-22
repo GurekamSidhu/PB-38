@@ -6,7 +6,7 @@ home = os.getenv("HOME")
 # top_level = '/dynprice'
 top_level = '/capstone/PB-38'
 
-with open(home + top_level + '/bin/receipts.bson','rb') as receiptsfile:
+with open(home + '/dump/porton/receipts.bson','rb') as receiptsfile:
     receipts = bson.decode_all(receiptsfile.read())
 
 with open(home + top_level + '/receipts_schema.json','r') as schemafile:
