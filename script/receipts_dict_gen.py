@@ -1,27 +1,25 @@
 import bson
 import json
 
-with open('./receipts.bson','rb') as file:
-    data = bson.decode_all(file.read())
+with open('../bin/receipts.bson','rb') as receiptsfile:
+    receipts = bson.decode_all(receiptsfile.read())
 
-specialties = {}
-eventTypes = {}
-types = {}
-for row in data:
-    if(row['specialty'] not in specialties and row['specialty'] is not None):
-        specialties[row['specialty']] = len(specialties)
-    if(row['eventType'] not in eventTypes and row['eventType'] is not None):
-        eventTypes[row['eventType']] = len(eventTypes)
-    if(row['type'] not in types and row['type'] is not None):
-        types[row['type']] = len(types)
+with open('../receipts_schema.json','r') as schemafile:
+    schema = json.loads(schemafile.read())
 
-obj = {
-    "specialties": specialties,
-    "eventTypes": eventTypes,
-    "types": types,
-}
+dicts = {}
 
-jsontxt = json.dumps(obj)
+for datatype in schema:
+    if(schema[datatype] == 'class'):
+        dicts[datatype] = {}
 
-with open('./receipts-dict.json', 'w') as file:
+for row in receipts:
+    for datatype in schema:
+        if(schema[datatype] == 'class'):
+            if(row[datatype] not in dicts[datatype] and row[datatype] is not None):
+                dicts[datatype][row[datatype]] = len(dicts[datatype])
+
+jsontxt = json.dumps(dicts)
+
+with open('../bin/receipts_dict.json', 'w') as file:
     file.write(jsontxt)
