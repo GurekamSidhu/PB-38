@@ -60,15 +60,15 @@ api.add_resource(Price, '/calculate')
 
 def format_features(duration, speciality, eventType, typ):
 	features = np.zeros((1,23))
-    duration_vector = np.asarray([duration])
-    speciality_vector = np.zeros(self.speciality_length, dtype=int)
-    speciality_vector[speciality] = 1
-    event_type_vector = np.zeros(self.event_type_length, dtype=int)
-    event_type_vector[eventType] = 1
-    type_vector = np.zeros(self.type_length, dtype=int)
-    type_vector[typ] = 1
-    vector = np.concatenate((duration_vector, speciality_vector, event_type_vector, type_vector))
-    features[0] = vector
+	duration_vector = np.asarray([duration])
+	speciality_vector = np.zeros(self.speciality_length, dtype=int)
+	speciality_vector[speciality] = 1
+	event_type_vector = np.zeros(self.event_type_length, dtype=int)
+	event_type_vector[eventType] = 1
+	type_vector = np.zeros(self.type_length, dtype=int)
+	type_vector[typ] = 1
+	vector = np.concatenate((duration_vector, speciality_vector, event_type_vector, type_vector))
+	features[0] = vector
 	return features
 
 @parser.error_handler
