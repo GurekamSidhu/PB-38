@@ -13,14 +13,16 @@ import receipts_dict_gen
 random.seed()
 
 home = os.getenv("HOME")
+# top_level = '/dynprice'
+top_level = '/capstone/PB-38'
 
 with open(home + '/dump/porton/receipts.bson','rb') as datafile:
     data = bson.decode_all(datafile.read())
 
-with open('../receipts_schema.json','r') as schemafile:
+with open(home + top_level +'/receipts_schema.json','r') as schemafile:
     schema = json.loads(schemafile.read())
 
-with open(home + '/dynprice/bin/receipts_dict.json', 'r') as dictfile:
+with open(home + + top_level + '/bin/receipts_dict.json', 'r') as dictfile:
     dicts = json.loads(dictfile.read())
 
 features = []
@@ -90,7 +92,7 @@ training_epochs = 50000
 
 labels = np.array(labels).astype(float)
 
-fakedata_file = '../bin/receipts_fake.json'
+fakedata_file = home + top_level + '/bin/receipts_fake.json'
 if(os.path.exists(fakedata_file)):
     with open(fakedata_file, 'r') as fakefile:
         fileobj = json.loads(fakefile.read())
@@ -108,7 +110,7 @@ print(reg.score(features, labels))
 predictions = reg.predict(features)
 print(mean_squared_error(labels, predictions))
 
-model_file = home + '/dynprice/bin/receipts_model.pkl'
+model_file = home + top_level + '/bin/receipts_model.pkl'
 
 with open(model_file, 'wb') as dumpfile:
     pkl.dump(reg, dumpfile)
