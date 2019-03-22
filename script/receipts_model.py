@@ -12,13 +12,13 @@ import json
 random.seed()
 
 home = os.getenv("HOME")
-# top_level = '/dynprice'
+top_level = '/dynprice'
 # top_level = '/capstone/PB-38'
 
 with open(home + '/dump/porton/receipts.bson','rb') as datafile:
     data = bson.decode_all(datafile.read())
 
-with open(home + 'capstone/PB-38/bin/receipts-dict.json', 'r') as dictfile:
+with open(home + top_level + '/bin/receipts-dict.json', 'r') as dictfile:
     obj = json.loads(dictfile.read())
     specialties = obj['specialties']
     eventTypes = obj['eventTypes']
