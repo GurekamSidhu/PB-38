@@ -19,7 +19,7 @@ top_level = '/dynprice'
 # model = ReceiptsModel()
 script_file = home + top_level + '/script/receipts_model.py'
 model_file = home + top_level + '/bin/receipts-model.pkl'
-runpy.run_path(file_path=script_file)
+runpy.run_path(script_file)
 model = pkl.load(open(model_file, 'rb'))
 print(model)
 
