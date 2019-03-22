@@ -3,7 +3,10 @@ from flask_restful import Resource, Api
 from webargs.flaskparser import parser, abort						# To parse arguments
 from webargs import fields, validate							# To validate arguments
 
-from ..model.receiptsfakemodel import ReceiptsModel 					# Model to query
+import pickle as pkl
+import os
+
+# from script import receiptsmodel					# Model to query
 
 import datetime
 
@@ -11,8 +14,11 @@ import datetime
 api_blueprint = Blueprint('api', 'api', url_prefix='/api')
 api = Api(api_blueprint)
 
+home = os.getenv("HOME")
 
-model = ReceiptsModel()
+# model = ReceiptsModel()
+model_file = home + '/dynprice/bin/receipts-model.pkl'
+model = pkl.load(open(model_file, 'rb'))
 
 """
 API ENDPOINTS
