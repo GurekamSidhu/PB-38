@@ -25,7 +25,7 @@ with open(home + '/dump/porton/receipts.bson','rb') as datafile:
 with open(home + top_level +'/receipts_schema.json','r') as schemafile:
     schema = json.loads(schemafile.read())
 
-with open(home + + top_level + '/bin/receipts_dict.json', 'r') as dictfile:
+with open(home + top_level + '/bin/receipts_dict.json', 'r') as dictfile:
     dicts = json.loads(dictfile.read())
 
 features = []
