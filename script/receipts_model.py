@@ -12,8 +12,8 @@ import json
 random.seed()
 
 home = os.getenv("HOME")
-top_level = '/dynprice'
-# top_level = '/capstone/PB-38'
+# top_level = '/dynprice'
+top_level = '/capstone/PB-38'
 
 print("*** START OF SCRIPT ***")
 
