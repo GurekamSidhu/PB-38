@@ -74,6 +74,10 @@ def format_features(duration, speciality, eventType, typ):
 	type_vector = np.zeros(type_length, dtype=int)
 	type_vector[typ] = 1
 	vector = np.concatenate((duration_vector, speciality_vector, event_type_vector, type_vector))
+	print("Duration: " + str(len(duration_vector)))
+	print("Speciality: " + str(len(speciality_vector)))
+	print("Event type: " + str(len(event_type_vector)))
+	print("Type: " + str(len(type_vector)))
 	features[0] = vector
 	return features
 
