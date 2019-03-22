@@ -12,11 +12,13 @@ import json
 random.seed()
 
 home = os.getenv("HOME")
+# top_level = '/dynprice'
+top_level = '/capstone/PB-38'
 
 with open(home + '/dump/porton/receipts.bson','rb') as datafile:
     data = bson.decode_all(datafile.read())
 
-with open(home + '/dynprice/bin/receipts-dict.json', 'r') as dictfile:
+with open(home + top_level + '/bin/receipts-dict.json', 'r') as dictfile:
     obj = json.loads(dictfile.read())
     specialties = obj['specialties']
     eventTypes = obj['eventTypes']
@@ -108,7 +110,7 @@ print(reg.score(features, labels))
 predictions = reg.predict(features)
 print(mean_squared_error(labels, predictions))
 
-model_file = home + '/dynprice/bin/receipts-model.pkl'
+model_file = home + top_level + '/bin/receipts-model.pkl'
 
 with open(model_file, 'wb') as dumpfile:
     pkl.dump(reg, dumpfile)

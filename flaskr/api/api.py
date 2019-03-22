@@ -15,10 +15,13 @@ api_blueprint = Blueprint('api', 'api', url_prefix='/api')
 api = Api(api_blueprint)
 
 home = os.getenv("HOME")
+# top_level = '/dynprice'
+top_level = '/capstone/PB-38'
 
 # model = ReceiptsModel()
-model_file = home + '/dynprice/bin/receipts-model.pkl'
+model_file = home + top_level + '/bin/receipts-model.pkl'
 model = pkl.load(open(model_file, 'rb'))
+print(model)
 
 """
 API ENDPOINTS
