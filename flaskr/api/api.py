@@ -28,7 +28,7 @@ API ENDPOINTS
 class Retrain(Resource):
 	def get(self):
 		''' Retrains the model'''
-		importlib.import_module(script_file)
+		runpy.run_path(script_file)
 		model = pkl.load(open(model_file, 'rb'))
 		if model is not None:
 			return 1
