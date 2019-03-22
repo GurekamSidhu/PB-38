@@ -15,6 +15,8 @@ home = os.getenv("HOME")
 top_level = '/dynprice'
 # top_level = '/capstone/PB-38'
 
+print("*** START OF SCRIPT ***")
+
 with open(home + '/dump/porton/receipts.bson','rb') as datafile:
     data = bson.decode_all(datafile.read())
 

@@ -5,9 +5,7 @@ from webargs import fields, validate							# To validate arguments
 
 import pickle as pkl
 import os
-
-# from script import receiptsmodel					# Model to query
-
+import importlib
 import datetime
 
 # Register blueprint
@@ -19,7 +17,9 @@ top_level = '/dynprice'
 # top_level = '/capstone/PB-38'
 
 # model = ReceiptsModel()
+script_file = home + top_level + '/scipt/receipts_model'
 model_file = home + top_level + '/bin/receipts-model.pkl'
+importlib.import_module(script_file)
 model = pkl.load(open(model_file, 'rb'))
 print(model)
 
@@ -29,7 +29,8 @@ API ENDPOINTS
 class Retrain(Resource):
 	def get(self):
 		''' Retrains the model'''
-		model = ReceiptsModel()
+		importlib.import_module(script_file)
+		model = pkl.load(open(model_file, 'rb'))
 		if model is not None:
 			return 1
 		else:
