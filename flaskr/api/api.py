@@ -16,12 +16,11 @@ home = os.getenv("HOME")
 top_level = '/dynprice'
 # top_level = '/capstone/PB-38'
 
-# model = ReceiptsModel()
 script_file = home + top_level + '/script/receipts_model.py'
 model_file = home + top_level + '/bin/receipts-model.pkl'
 runpy.run_path(script_file)
 model = pkl.load(open(model_file, 'rb'))
-print(model)
+print("API file running")
 
 """
 API ENDPOINTS
