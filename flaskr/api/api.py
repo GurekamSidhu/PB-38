@@ -7,6 +7,7 @@ import pickle as pkl
 import os
 import runpy
 import datetime
+import numpy as np
 
 # Register blueprint
 api_blueprint = Blueprint('api', 'api', url_prefix='/api')
