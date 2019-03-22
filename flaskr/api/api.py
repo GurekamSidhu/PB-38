@@ -21,7 +21,6 @@ script_file = home + top_level + '/script/receipts_model.py'
 model_file = home + top_level + '/bin/receipts-model.pkl'
 runpy.run_path(script_file)
 model = pkl.load(open(model_file, 'rb'))
-print("API file running")
 
 speciality_length = 12
 event_type_length = 3
@@ -74,10 +73,6 @@ def format_features(duration, speciality, eventType, typ):
 	type_vector = np.zeros(type_length, dtype=int)
 	type_vector[typ] = 1
 	vector = np.concatenate((duration_vector, speciality_vector, event_type_vector, type_vector))
-	print("Duration: " + str(len(duration_vector)))
-	print("Speciality: " + str(len(speciality_vector)))
-	print("Event type: " + str(len(event_type_vector)))
-	print("Type: " + str(len(type_vector)))
 	features[0] = vector
 	return features
 
