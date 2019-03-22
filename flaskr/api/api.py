@@ -5,7 +5,7 @@ from webargs import fields, validate							# To validate arguments
 
 import pickle as pkl
 import os
-import importlib
+import runpy
 import datetime
 
 # Register blueprint
@@ -17,7 +17,7 @@ top_level = '/dynprice'
 # top_level = '/capstone/PB-38'
 
 # model = ReceiptsModel()
-script_file = home + top_level + '/scipt/receipts_model'
+script_file = home + top_level + '/script/receipts_model.py'
 model_file = home + top_level + '/bin/receipts-model.pkl'
 importlib.import_module(script_file)
 model = pkl.load(open(model_file, 'rb'))
