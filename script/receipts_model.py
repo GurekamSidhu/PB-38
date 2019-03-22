@@ -8,13 +8,16 @@ from sklearn.linear_model import LinearRegression
 from dateutil import parser
 import bson
 import json
-import receipts_dict_gen
+import runpy
 
 random.seed()
 
 home = os.getenv("HOME")
 # top_level = '/dynprice'
 top_level = '/capstone/PB-38'
+
+receipts_dict_gen = home + top_level + '/script/receipts_dict_gen.py'
+runpy.run_path(receipts_dict_gen)
 
 with open(home + '/dump/porton/receipts.bson','rb') as datafile:
     data = bson.decode_all(datafile.read())

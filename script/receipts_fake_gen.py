@@ -9,11 +9,13 @@ import random
 import os
 
 home = os.getenv("HOME")
+# top_level = '/dynprice'
+top_level = '/capstone/PB-38'
 
 with open(home + '/dump/porton/receipts.bson','rb') as infile:
     data = bson.decode_all(infile.read())
 
-with open('../bin/receipts_dict.json', 'r') as dictfile:
+with open(home + top_level + '/bin/receipts_dict.json', 'r') as dictfile:
     obj = json.loads(dictfile.read())
     specialties = obj['specialty']
     eventTypes = obj['eventType']
@@ -26,7 +28,7 @@ newentries = []
 features = []
 labels = []
     
-model_file = '../bin/receipts_model.pkl'
+model_file = home + top_level + '/bin/receipts_model.pkl'
 with open(model_file, 'rb') as dumpfile:
     reg = pkl.load(dumpfile)
 
@@ -74,7 +76,7 @@ fileobj = {
             'features': newentries,
             'labels': prices
         }
-fakefile = '../bin/receipts_fake.json'
+fakefile = home + top_level + '/bin/receipts_fake.json'
 with open(fakefile, 'w') as outfile:
     outfile.write(json.dumps(fileobj))
     print((str)(newsize) + " fake entries created in " + fakefile)

@@ -1,10 +1,15 @@
 import bson
 import json
+import os
 
-with open('../bin/receipts.bson','rb') as receiptsfile:
+home = os.getenv("HOME")
+# top_level = '/dynprice'
+top_level = '/capstone/PB-38'
+
+with open(home + top_level + '/bin/receipts.bson','rb') as receiptsfile:
     receipts = bson.decode_all(receiptsfile.read())
 
-with open('../receipts_schema.json','r') as schemafile:
+with open(home + top_level + '/receipts_schema.json','r') as schemafile:
     schema = json.loads(schemafile.read())
 
 dicts = {}
@@ -21,5 +26,5 @@ for row in receipts:
 
 jsontxt = json.dumps(dicts)
 
-with open('../bin/receipts_dict.json', 'w') as file:
+with open(home + top_level + '/bin/receipts_dict.json', 'w') as file:
     file.write(jsontxt)
