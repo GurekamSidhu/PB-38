@@ -23,6 +23,11 @@ runpy.run_path(script_file)
 model = pkl.load(open(model_file, 'rb'))
 print("API file running")
 
+speciality_length = 12
+event_type_length = 3
+type_length = 6
+
+
 """
 API ENDPOINTS
 """
@@ -62,11 +67,11 @@ api.add_resource(Price, '/calculate')
 def format_features(duration, speciality, eventType, typ):
 	features = np.zeros((1,23))
 	duration_vector = np.asarray([duration])
-	speciality_vector = np.zeros(self.speciality_length, dtype=int)
+	speciality_vector = np.zeros(speciality_length, dtype=int)
 	speciality_vector[speciality] = 1
-	event_type_vector = np.zeros(self.event_type_length, dtype=int)
+	event_type_vector = np.zeros(event_type_length, dtype=int)
 	event_type_vector[eventType] = 1
-	type_vector = np.zeros(self.type_length, dtype=int)
+	type_vector = np.zeros(type_length, dtype=int)
 	type_vector[typ] = 1
 	vector = np.concatenate((duration_vector, speciality_vector, event_type_vector, type_vector))
 	features[0] = vector

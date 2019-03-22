@@ -88,10 +88,6 @@ for row in data:
     features.append(vector)
     labels.append(row['price'])
 
-    print(len(specialties))
-    print(len(eventTypes))
-    print(len(types))
-
 print((str)(len(features)) + " usable training entries")
 
 training_epochs = 50000
