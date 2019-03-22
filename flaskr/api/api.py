@@ -65,7 +65,7 @@ class Price(Resource):
 api.add_resource(Price, '/calculate')
 
 def format_features(duration, speciality, eventType, typ):
-	features = np.zeros((1,23))
+	features = np.zeros((1,22))
 	duration_vector = np.asarray([duration])
 	speciality_vector = np.zeros(speciality_length, dtype=int)
 	speciality_vector[speciality] = 1
