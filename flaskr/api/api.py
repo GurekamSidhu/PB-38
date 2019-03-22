@@ -18,7 +18,7 @@ home = os.getenv("HOME")
 top_level = '/capstone/PB-38'
 
 script_file = home + top_level + '/script/receipts_model.py'
-model_file = home + top_level + '/bin/receipts-model.pkl'
+model_file = home + top_level + '/bin/receipts_model.pkl'
 runpy.run_path(script_file)
 model = pkl.load(open(model_file, 'rb'))
 
