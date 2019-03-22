@@ -5,7 +5,7 @@ from webargs import fields, validate							# To validate arguments
 
 import pickle as pkl
 import os
-import runpy
+import importlib
 import datetime
 
 # Register blueprint
