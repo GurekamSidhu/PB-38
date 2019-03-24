@@ -1,10 +1,10 @@
-from flask import Flask, Blueprint, request, render_template
+from flask import Flask, Blueprint, current_app, request, render_template
 from flask_restful import Resource, Api
 from webargs.flaskparser import parser, abort						# To parse arguments
 from webargs import fields, validate							# To validate arguments
 
-import pickle as pkl
-import os
+from .price_model import PriceModel
+
 import runpy
 import datetime
 import numpy as np
@@ -13,19 +13,6 @@ import numpy as np
 api_blueprint = Blueprint('api', 'api', url_prefix='/api')
 api = Api(api_blueprint)
 
-home = os.getenv("HOME")
-# top_level = '/dynprice'
-top_level = '/capstone/PB-38'
-
-script_file = home + top_level + '/script/receipts_model.py'
-model_file = home + top_level + '/bin/receipts_model.pkl'
-runpy.run_path(script_file)
-model = pkl.load(open(model_file, 'rb'))
-
-speciality_length = 12
-event_type_length = 3
-type_length = 6
-
 
 """
 API ENDPOINTS
@@ -33,22 +20,20 @@ API ENDPOINTS
 class Retrain(Resource):
 	def get(self):
 		''' Retrains the model'''
-		runpy.run_path(script_file)
-		model = pkl.load(open(model_file, 'rb'))
-		if model is not None:
+		PriceModel.retrain_model()
+		current_app.model = PriceModel.load_model()
+		if current_app.model is not None:
 			return 1
 		else:
 			return 0
 
-api.add_resource(Retrain, '/retrain')
 
 class Price(Resource):
 	def get(self):
 		''' Get predicted price for given parameters '''
 		''' Returns 400 error if invalid parameters '''
 		args = self.get_request_parameters(request)
-		features = format_features(args['duration'], args['speciality'], args['eventType'], args['type'])
-		price = model.predict(features)
+		price = self.get_price(args['duration'], args['speciality'], args['eventType'], args['type'])
 		return {'price': price[0]}
 
 	def get_request_parameters(self, data):
@@ -61,20 +46,38 @@ class Price(Resource):
 		}
 		return parser.parse(request_args, data)
 		
+	def format_features(self, duration, speciality, eventType, typ):
+		''' Produces a features vector '''
+		speciality_length = 12
+		event_type_length = 3
+		type_length = 6
+
+		features = np.zeros((1,22))
+
+		duration_vector = np.asarray([duration])
+		
+		speciality_vector = np.zeros(speciality_length, dtype=int)
+		speciality_vector[speciality] = 1
+
+		event_type_vector = np.zeros(event_type_length, dtype=int)
+		event_type_vector[speciality] = 1
+		
+		type_vector = np.zeros(type_length, dtype=int)
+		type_vector[typ] = 1
+
+		vector = np.concatenate((duration_vector, speciality_vector, event_type_vector, type_vector))
+		features[0] = vector
+		return features
+
+	def get_price(self, duration, speciality, eventType, typ):
+		''' Return price given set of features '''
+		features = self.format_features(duration, speciality, eventType, typ)
+		return current_app.model.predict(features)
+
+
+api.add_resource(Retrain, '/retrain')
 api.add_resource(Price, '/calculate')
 
-def format_features(duration, speciality, eventType, typ):
-	features = np.zeros((1,22))
-	duration_vector = np.asarray([duration])
-	speciality_vector = np.zeros(speciality_length, dtype=int)
-	speciality_vector[speciality] = 1
-	event_type_vector = np.zeros(event_type_length, dtype=int)
-	event_type_vector[eventType] = 1
-	type_vector = np.zeros(type_length, dtype=int)
-	type_vector[typ] = 1
-	vector = np.concatenate((duration_vector, speciality_vector, event_type_vector, type_vector))
-	features[0] = vector
-	return features
 
 @parser.error_handler
 def handle_request_parsing_error(err, req, schema, error_status_code, error_headers):

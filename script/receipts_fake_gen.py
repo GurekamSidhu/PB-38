@@ -15,7 +15,7 @@ top_level = '/capstone/PB-38'
 with open(home + '/dump/porton/receipts.bson','rb') as infile:
     data = bson.decode_all(infile.read())
 
-with open(home + top_level + '/bin/receipts_dict.json', 'r') as dictfile:
+with open('receipts_dict.json', 'r') as dictfile:
     obj = json.loads(dictfile.read())
     specialties = obj['specialty']
     eventTypes = obj['eventType']
@@ -28,7 +28,7 @@ newentries = []
 features = []
 labels = []
     
-model_file = home + top_level + '/bin/receipts_model.pkl'
+model_file = 'bin/receipts_model.pkl'
 with open(model_file, 'rb') as dumpfile:
     reg = pkl.load(dumpfile)
 
@@ -71,12 +71,11 @@ for i in range(0, newsize):
     prices.append(price)
     newentries.append(newrow.tolist())
 
-
 fileobj = {
             'features': newentries,
             'labels': prices
         }
-fakefile = home + top_level + '/bin/receipts_fake.json'
+fakefile = 'bin/receipts_fake.json'
 with open(fakefile, 'w') as outfile:
     outfile.write(json.dumps(fileobj))
     print((str)(newsize) + " fake entries created in " + fakefile)

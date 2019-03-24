@@ -2,8 +2,17 @@ import os
 
 from flask import Flask
 from flask_bootstrap import Bootstrap
+from .api.price_model import PriceModel
 from .api.api import api_blueprint
 from .serve import app_blueprint
+
+import pickle as pkl
+
+MODEL_INIT_PATH='../script/receipts_model.py'
+MODEL_PATH='bin/receipts_model.pkl'
+
+def load_model():
+    return pkl.load(open(MODEL_PATH, 'rb'))
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -11,6 +20,8 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev'
     )
+
+    app.model = PriceModel.load_model()
 
     app.static_folder = 'static'
     bootstrap = Bootstrap(app)
