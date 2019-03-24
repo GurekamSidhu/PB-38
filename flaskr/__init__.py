@@ -11,8 +11,6 @@ import pickle as pkl
 MODEL_INIT_PATH='../script/receipts_model.py'
 MODEL_PATH='bin/receipts_model.pkl'
 
-def load_model():
-    return pkl.load(open(MODEL_PATH, 'rb'))
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
