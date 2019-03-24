@@ -17,6 +17,8 @@ home = os.getenv("HOME")
 with open(home + '/dump/porton/receipts.bson','rb') as datafile:
     data = bson.decode_all(datafile.read())
 
+runpy.run_path('script/receipts_dict_gen.py')
+
 with open('receipts_schema.json','r') as schemafile:
     schema = json.loads(schemafile.read())
 
