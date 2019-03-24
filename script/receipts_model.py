@@ -9,6 +9,7 @@ from dateutil import parser
 import bson
 import json
 import runpy
+import os
 #import receipts_dict_gen
 
 random.seed()
