@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from flask_bootstrap import Bootstrap
+from .api.price_model import PriceModel
 from .api.api import api_blueprint
 from .serve import app_blueprint
 
@@ -11,6 +12,8 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev'
     )
+
+    app.model = PriceModel.load_model()
 
     app.static_folder = 'static'
     bootstrap = Bootstrap(app)
