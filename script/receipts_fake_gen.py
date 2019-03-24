@@ -9,13 +9,11 @@ import random
 import os
 
 home = os.getenv("HOME")
-# top_level = '/dynprice'
-top_level = '/capstone/PB-38'
 
 with open(home + '/dump/porton/receipts.bson','rb') as infile:
     data = bson.decode_all(infile.read())
 
-with open('receipts_dict.json', 'r') as dictfile:
+with open('bin/receipts_dict.json', 'r') as dictfile:
     obj = json.loads(dictfile.read())
     specialties = obj['specialty']
     eventTypes = obj['eventType']
@@ -70,6 +68,7 @@ for i in range(0, newsize):
     price = reg.predict(newrow.reshape(1,-1))[0]
     prices.append(price)
     newentries.append(newrow.tolist())
+
 
 fileobj = {
             'features': newentries,

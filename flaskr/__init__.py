@@ -6,8 +6,6 @@ from .api.price_model import PriceModel
 from .api.api import api_blueprint
 from .serve import app_blueprint
 
-import pickle as pkl
-
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     # default configuration

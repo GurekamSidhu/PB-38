@@ -8,21 +8,16 @@ from sklearn.linear_model import LinearRegression
 from dateutil import parser
 import bson
 import json
-import runpy
+#import receipts_dict_gen
 
 random.seed()
 
 home = os.getenv("HOME")
-# top_level = '/dynprice'
-top_level = '/capstone/PB-38'
-
-receipts_dict_gen = 'script/receipts_dict_gen.py'
-runpy.run_path(receipts_dict_gen)
 
 with open(home + '/dump/porton/receipts.bson','rb') as datafile:
     data = bson.decode_all(datafile.read())
 
-with open('receipts_schema.json', 'r') as schemafile:
+with open('receipts_schema.json','r') as schemafile:
     schema = json.loads(schemafile.read())
 
 with open('bin/receipts_dict.json', 'r') as dictfile:
@@ -113,7 +108,7 @@ print(reg.score(features, labels))
 predictions = reg.predict(features)
 print(mean_squared_error(labels, predictions))
 
-model_file = "bin/receipts_model.pkl"
+model_file = 'bin/receipts_model.pkl'
 
 with open(model_file, 'wb') as dumpfile:
     pkl.dump(reg, dumpfile)
