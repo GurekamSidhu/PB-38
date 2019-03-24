@@ -8,10 +8,6 @@ from .serve import app_blueprint
 
 import pickle as pkl
 
-MODEL_INIT_PATH='../script/receipts_model.py'
-MODEL_PATH='bin/receipts_model.pkl'
-
-
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     # default configuration
