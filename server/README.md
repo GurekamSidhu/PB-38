@@ -88,6 +88,7 @@ Data:
 ```
 #### Authentication
 To access endpoints, use Basic HTTP Authentication and tokens below.
+
 Users|Token
 --- | ---
 User | 6b93ccba414ac1d0ae1e77f3fac560c748a6701ed6946735a49d463351518e16
