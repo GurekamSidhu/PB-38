@@ -12,7 +12,7 @@ class TestGetPrice(BaseTestCase):
 	def testInvalidAccess(self):
 		url = get_price_url(self, duration=1, speciality=1, eventType=1, visitType=1)
 		response = self.client.get(url)
-		data = json.loads(response.data.decode())		
+		data = json.loads(response.data.decode())
 		self.assertEquals(data['status'], 'Failure')
 
 	def testValidAccess(self):
@@ -24,3 +24,23 @@ class TestGetPrice(BaseTestCase):
 			headers=headers)
 		data = json.loads(response.data.decode())
 		self.assertEquals(data['status'], 'Success')
+
+	def testMissingParameters(self):
+		url = "/api/calculate?duration=1&speciality=1&eventType=1"
+		headers = dict(
+			Authorization="Bearer {}".format(USER_TOKEN)
+		)
+		response = self.client.get(url,
+			headers=headers)
+		data=json.loads(response.data.decode())
+		self.assertEquals(data['status'], 'Failure')
+
+	def testInvalidParameters(self):
+		url = get_price_url(self, duration='abc', speciality=1, eventType=1, visitType=1)
+		headers = dict(
+			Authorization="Bearer {}".format(USER_TOKEN)
+		)
+		response = self.client.get(url,
+			headers=headers)
+		data = json.loads(response.data.decode())
+		self.assertEquals(data['status'], 'Failure')

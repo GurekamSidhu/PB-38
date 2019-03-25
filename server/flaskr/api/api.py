@@ -84,10 +84,10 @@ class Price(Resource):
 	def get_request_parameters(self, data):
 		''' Parse and validate request parameters '''
 		request_args = {
-			"duration" : fields.Int(validate=lambda val: val > 0),
-			"speciality" : fields.Int(validate=lambda val: val > 0),
-			"eventType" : fields.Int(validate=lambda val: val > 0),
-			"type" : fields.Int(validate=lambda val: val > 0),
+			"duration" : fields.Int(required=True, validate=lambda val: val > 0),
+			"speciality" : fields.Int(required=True, validate=lambda val: val > 0),
+			"eventType" : fields.Int(required=True, validate=lambda val: val > 0),
+			"type" : fields.Int(required=True, validate=lambda val: val > 0),
 		}
 		return parser.parse(request_args, data)
 		
@@ -129,7 +129,12 @@ def handle_request_parsing_error(err, req, schema, error_status_code, error_head
     """webargs error handler that uses Flask-RESTful's abort function to return
     a JSON error response to the client.
     """
-    abort(400, errors=err.messages)
+    #abort(400, errors=err.messages)
+    response = {
+        'status': 'Failure',
+        'message': err.messages	
+    }
+    abort(400, status='Failure', message=err.messages)
 
 
 def authenticate(auth_header, admin=False):

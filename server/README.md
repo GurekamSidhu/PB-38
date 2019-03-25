@@ -1,7 +1,7 @@
 ## Server
 
 ### To Run
-To start server at `localhost:3000`
+To start server at `localhost:5000`
 ```
 python manage.py run <dev|test|prod>
 ```
