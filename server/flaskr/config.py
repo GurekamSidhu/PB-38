@@ -11,6 +11,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
 
 class TestingConfig(Config):
+    PRESERVE_CONTEXT_ON_EXCEPTION = False
     DEBUG = True
     TESTING = True
 
