@@ -24,5 +24,5 @@ for row in receipts:
 
 jsontxt = json.dumps(dicts)
 
-with open('../bin/receipts_dict.json', 'w') as file:
+with open('bin/receipts_dict.json', 'w') as file:
     file.write(jsontxt)
