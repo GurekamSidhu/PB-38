@@ -18,8 +18,8 @@ class TraitsForm(Form):
 	''' Event parameters form '''
 	speciality_types = ['Cardiology', 'Neurology', 'Dermatology', 'Clinical Genetics and Genomics', 'Pulmonology', 'Anesthesiology', 'Allergy and Immunology', 'Aerospace Medicine', 'Clinical Counselling', 'Family Medicine/General Practitioner', 'Plastic Surgery', 'Pediatrics']
 	event_types = ['Video', 'Report', 'Voice']
-	visit_types = ['Counseling Video', 'Consulatation Video', 'Consulatation Report', 'Consultation Email', 'Conseling Email', 'Conseling Voice']
-	# visit_types = ['Counseling Video', 'Consulatation Video', 'Consulatation Report', 'Consultation Email', 'Conseling Email', 'Conseling Voice', 'Consultation Voice', 'Conseling Report']
+	visit_types = ['Counselling Video', 'Consultation Video', 'Consultation Report', 'Consultation Email', 'Counselling Email', 'Counselling Voice']
+	# visit_types = ['Counselling Video', 'Consultation Video', 'Consultation Report', 'Consultation Email', 'Counselling Email', 'Counselling Voice', 'Consultation Voice', 'Counselling Report']
 
 	specialities = []
 	events = []
