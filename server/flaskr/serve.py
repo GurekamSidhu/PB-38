@@ -32,7 +32,7 @@ class TraitsForm(Form):
 	for i in range (0, len(visit_types)):
 		visits.append((i + 1, visit_types[i]))
 
-	duration 	= IntegerField('Duration', validators=[InputRequired(),NumberRange(min=1)])				# Must be greater than 0
+	duration 	= IntegerField('Duration(s)', validators=[InputRequired(),NumberRange(min=1)])				# Must be greater than 0
 	speciality 	= SelectField('Speciality',coerce=int, choices=specialities)	
 	event_type 	= SelectField('Event Type',coerce=int, choices=events)
 	visit_type 	= SelectField('Visit Type',coerce=int, choices=visits)
@@ -46,15 +46,23 @@ def getPrice():
 	form=TraitsForm(csrf_enabled=False)
 	if request.method == 'GET':
 		'''Render form to input visit details'''
-		return render_template('entertraits.html', form=form)
+		return render_template('index.html', form=form)
 	
 	if request.method == 'POST':
 		'''Request price for given details'''
 		form_data = request.form
 		if form.validate_on_submit() == False:
 			flash("Invalid Input")
-			return render_template('entertraits.html', form=form)
+			return render_template('index.html', form=form)
 		data = {'duration': form_data['duration'], 'speciality' : form_data['speciality'], 'eventType' : form_data['event_type'], 'type': form_data['visit_type']}
-		r = requests.get(request.base_url + 'api/calculate', params=data)
-		price = json.loads(r.text)['price']
-		return render_template('showprice.html', price=price)
+		headers = {
+			'Authorization': 'Basic 6b93ccba414ac1d0ae1e77f3fac560c748a6701ed6946735a49d463351518e16'
+		}
+		r = requests.get(request.base_url + 'api/calculate', headers=headers, params=data)
+		if r.status_code == requests.codes.ok:
+			price = json.loads(r.text)['data']['price']
+			return render_template('index.html', price=price)
+		else:
+			return 'error'
+def restart():
+	print("here")
