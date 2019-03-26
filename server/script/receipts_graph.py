@@ -13,10 +13,12 @@ import os
 
 random.seed()
 
-home = os.getenv("HOME")
+# home = os.getenv("HOME")
 
-with open(home + '/dump/porton/receipts.bson','rb') as datafile:
-    data = bson.decode_all(datafile.read())
+# with open(home + '/dump/porton/receipts.bson','rb') as datafile:
+#     data = bson.decode_all(datafile.read())
+with open('bin/receipts.bson','rb') as receiptsfile:
+    data = bson.decode_all(receiptsfile.read())
 
 runpy.run_path('./receipts_dict_gen.py')
 

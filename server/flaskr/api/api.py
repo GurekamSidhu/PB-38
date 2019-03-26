@@ -102,13 +102,13 @@ class Price(Resource):
 		duration_vector = np.asarray([duration])
 		
 		speciality_vector = np.zeros(speciality_length, dtype=int)
-		speciality_vector[speciality] = 1
+		speciality_vector[speciality - 1] = 1
 
 		event_type_vector = np.zeros(event_type_length, dtype=int)
-		event_type_vector[eventType] = 1
+		event_type_vector[eventType - 1] = 1
 		
 		type_vector = np.zeros(type_length, dtype=int)
-		type_vector[typ] = 1
+		type_vector[typ - 1] = 1
 
 		vector = np.concatenate((duration_vector, speciality_vector, event_type_vector, type_vector))
 		features[0] = vector

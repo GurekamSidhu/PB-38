@@ -16,10 +16,11 @@ app_blueprint = Blueprint('app', __name__, url_prefix='')
 
 class TraitsForm(Form):
 	''' Event parameters form '''
-	speciality_types = ['Neurology', 'Pulmonology', 'Family Medicine', 'Clinical Genetics and Genomics', 'Clinical Counselling', 'Plastic Surgery', 'Anesthesiology', 'Pediatrics', 'Allergy and Immunology', 'Aerospace Medicine', 'Dermatology', 'Cardiology', 'None']
+	speciality_types = ['Cardiology', 'Neurology', 'Dermatology', 'Clinical Genetics and Genomics', 'Pulmonology', 'Anesthesiology', 'Allergy and Immunology', 'Aerospace Medicine', 'Clinical Counselling', 'Family Medicine/General Practitioner', 'Plastic Surgery', 'Pediatrics']
 	event_types = ['Video', 'Report', 'Voice']
-	visit_types = ['Counseling Video', 'Consulatation Video', 'Consulatation Report', 'Consultation Email', 'Conseling Email', 'Conseling Voice', 'Consultation Voice', 'Conseling Report']
-	
+	visit_types = ['Counseling Video', 'Consulatation Video', 'Consulatation Report', 'Consultation Email', 'Conseling Email', 'Conseling Voice']
+	# visit_types = ['Counseling Video', 'Consulatation Video', 'Consulatation Report', 'Consultation Email', 'Conseling Email', 'Conseling Voice', 'Consultation Voice', 'Conseling Report']
+
 	specialities = []
 	events = []
 	visits = []
