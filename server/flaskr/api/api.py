@@ -40,7 +40,8 @@ class Retrain(Resource):
 			}
 			return response, 401
 		PriceModel.retrain_model()
-		current_app.model,current_app.error = PriceModel.load_model_and_error()		if current_app.model is not None:
+		current_app.model,current_app.error = PriceModel.load_model_and_error()		
+		if current_app.model is not None:
 			return {
 				'status':'Success',
 				'message':'Successfully retrained model.'
