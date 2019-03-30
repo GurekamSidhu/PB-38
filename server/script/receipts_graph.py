@@ -22,6 +22,12 @@ from tkinter import ttk
 with open('../receipts_schema.json','r') as schemafile:
     schema = json.loads(schemafile.read())
 
+def row_complete(row):
+    for datatype in schema:
+        if(row[datatype] == None):
+            return False
+    return True
+
 class Grapher(tk.Frame):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
@@ -51,8 +57,8 @@ class Grapher(tk.Frame):
         self.top_text = tk.Text(self, width=100)
         self.top_text.destroy()
         self.top_text = tk.Text(self, width=100)
-        self.top_text.insert(tk.END, "Accuracy: " + '%.4f'%self.score)
-        self.top_text.insert(tk.END, "\nMeans Squared Error: " + '%.4f'%self.error)
+        self.top_text.insert(tk.END, "Accuracy: " + '%.2f'%(100*self.score) + '%')
+        self.top_text.insert(tk.END, "\nRMS Error: " + '%.4f'%self.error)
         self.top_text.place(x=60, y=0)
         
         self.canvas.get_tk_widget().destroy()
@@ -65,20 +71,29 @@ class Grapher(tk.Frame):
         z = self.durations_z
         self.top_text.destroy()
         self.top_text = tk.Text(self, width=100)
-        self.top_text.insert(tk.END, "Equation: y = " +'%.3f'%z[0]
+        self.top_text.insert(tk.END, "Equation: y = " +'%.4f'%z[0]
                              + "x + " + '%.3f'%z[1])
+        self.top_text.insert(tk.END, "\nWeight: " + '%.4f'%self.feature_coef['duration'])
         self.top_text.place(x=60, y=0)
         
         self.canvas.get_tk_widget().destroy()
         self.canvas = FigureCanvasTkAgg(self.duration_fig, self)
-        self.canvas.get_tk_widget().pack(side=tk.RIGHT, pady=(30,0),
+        self.canvas.get_tk_widget().pack(side=tk.RIGHT, pady=(35,0),
                                     fill=tk.Y, padx=(60,0), expand=True)
 
     def show_feature(self, event):
         datatype = event.widget['text']
         self.top_text.destroy()
-        self.top_text = tk.Text(self, width=100)
-        self.top_text.insert(tk.END, ' ')
+        if(schema[datatype] == 'class'):
+            self.top_text = tk.Text(self, width=100)
+            self.top_text.insert(tk.END, ' ')
+        elif(schema[datatype] == 'number'):
+            z = self.features_z[datatype]
+            self.top_text = tk.Text(self, width=100)
+            self.top_text.insert(tk.END, "Equation: y = " +'%.4f'%z[0]
+                                 + "x + " + '%.3f'%z[1])
+            self.top_text.insert(tk.END, "\nWeight: " + '%.4f'%self.feature_coef[datatype])
+
         self.top_text.place(x=60, y=0)
         
         self.canvas.get_tk_widget().destroy()
@@ -122,13 +137,20 @@ class Grapher(tk.Frame):
         feature_means = {}
         feature_count = {}
         feature_vectors = {}
+        self.feature_coef = {}
+        feature_coef_pos = {}
         for datatype in schema:
+            self.feature_coef[datatype] = 0
             if(schema[datatype] == 'class'):
                 feature_means[datatype] = [0]*len(dicts[datatype])
                 feature_count[datatype] = [0]*len(dicts[datatype])
+                feature_coef_pos[datatype] = (0,0)
             elif(schema[datatype] == 'number'):
                 feature_vectors[datatype] = []
+                feature_coef_pos[datatype] = 0
 
+        feature_coef_pos['duration'] = 0
+        
         durations = []
         prices = []
             
@@ -147,12 +169,11 @@ class Grapher(tk.Frame):
                 continue
 
             vector = []
-            skip = False
+            if(not row_complete(row)):
+                continue
+            
             for datatype in schema:
                 if(schema[datatype] == 'class'):
-                    if(row[datatype] == None):
-                        skip = True
-                        break
                     if(row[datatype] not in dicts[datatype]):
                         print(datatype + ' "' + row['specialty'] + '" not mapped')
                         exit(1)
@@ -160,20 +181,26 @@ class Grapher(tk.Frame):
                     feature_count[datatype][dicts[datatype][row[datatype]]] += 1
                     classvector = np.zeros(len(dicts[datatype]), dtype=int)
                     classvector[dicts[datatype][row[datatype]]] = 1
+                    
+                    feature_coef_pos[datatype] = (1+len(vector), 1+len(vector)+
+                                                  classvector.size)
+                    
+                    
                     vector = np.concatenate((vector, classvector))
+
                 elif(schema[datatype] == 'number'):
                     num = [(float)(row[datatype])]
                     vector = np.concatenate((vector, num))
+                    feature_coef_pos[datatype] = vector.size
                     feature_vectors[datatype].append(num[0])
                 else:
                     print("Unknown feature type " + datatype + ", " + schema[datatype])
                     print("Should be 'class' or 'number'")
                     exit(1)
-            if(skip):
-                continue
 
             durations.append(duration/60)
             prices.append(row['price'])
+            
             vector = np.concatenate(([duration],vector))
             
             features.append(vector)
@@ -188,7 +215,7 @@ class Grapher(tk.Frame):
         reg = LinearRegression().fit(features,labels)
         predictions = reg.predict(features)
         
-        self.error = mean_squared_error(labels, predictions)
+        self.error = np.sqrt(mean_squared_error(labels, predictions))
         self.score = reg.score(features,labels)
 
         self.duration_fig = plt.scatter(durations,prices,marker='o')
@@ -197,33 +224,41 @@ class Grapher(tk.Frame):
         ax.set_xlabel('Duration (minutes)')
         ax.set_ylabel('Price')
         ax.set_title('Duration')
+        self.feature_coef['duration'] = reg.coef_[feature_coef_pos['duration']]
                 
         z = np.polyfit(durations, prices, 1)
-        print('durations ', len(durations))
         self.durations_z = z
         p = np.poly1d(z)
         ax.plot(durations,p(durations),"k--")
         
         self.feature_figs = {}
         self.features_z = {}
+        pos = 0
         for datatype in schema:
 
             if(schema[datatype] == 'class'):
+                #get coefficients
+                self.feature_coef[datatype] = reg.coef_[feature_coef_pos[datatype][0]:feature_coef_pos[datatype][1]]
+                
                 feature_means[datatype] = np.divide(feature_means[datatype],feature_count[datatype])
 
                 fig, ax = plt.subplots()
 
-                index = np.arange(len(feature_means[datatype]))
+                index = np.arange(len(feature_means[datatype]))*1.25
                 bar_width = 0.35
                 opacity = 0.4
 
                 rects1 = ax.bar(index, feature_count[datatype], bar_width,
-                            alpha=opacity, color='b',
+                            alpha=opacity, color='k',
                             label='# of entries')
                 
                 rects2 = ax.bar(index + bar_width, feature_means[datatype], bar_width,
-                            alpha=opacity, color='r',
+                            alpha=opacity, color='g',
                             label='Average price')
+                
+                rects3 = ax.bar(index + bar_width*2, self.feature_coef[datatype], bar_width,
+                            alpha=opacity, color='r',
+                            label='Coefficient (effect on price)')
                 
                 ax.set_xticks(index + bar_width / 2)
                 ax.set_title(datatype)
@@ -237,7 +272,9 @@ class Grapher(tk.Frame):
                 fig.tight_layout()
                 self.feature_figs[datatype] = fig
             elif(schema[datatype] == 'number'):
+                self.feature_coef[datatype] = reg.coef_[feature_coef_pos[datatype]]
                 fig, ax = plt.subplots()
+
                 print(len(feature_vectors[datatype]), len(prices))
                 ax.scatter(feature_vectors[datatype], prices)
                 z = np.polyfit(feature_vectors[datatype], prices, 1)
@@ -246,12 +283,17 @@ class Grapher(tk.Frame):
                 ax.plot(feature_vectors[datatype],p(feature_vectors[datatype]),"k--")
                 self.feature_figs[datatype] = fig
 
+        print(reg.coef_)
+        print(self.feature_coef)
+        su = 0
+        #print(self.feature_coef)
         self.model_fig, ax = plt.subplots()
         ax.scatter(labels, predictions)
         ax.plot([labels.min(), labels.max()], [labels.min(), labels.max()], 'k--', lw=3)
         ax.set_xlabel('Measured')
         ax.set_ylabel('Predicted')
         ax.set_title('Learning Model Accuracy')
+
         
         self.canvas = FigureCanvasTkAgg(self.model_fig, self)
         self.show_model()
