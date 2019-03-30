@@ -5,7 +5,7 @@ RETRAIN_PATH='script/receipts_model.py'
 MODEL_PATH='bin/receipts_model.pkl'
 
 class PriceModel():
-	def load_model():
+	def load_model_and_error():
 		return pkl.load(open(MODEL_PATH, 'rb'))
 
 	def retrain_model():
