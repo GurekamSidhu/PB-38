@@ -6,7 +6,8 @@ MODEL_PATH='bin/receipts_model.pkl'
 
 class PriceModel():
 	def load_model_and_error():
-		return pkl.load(open(MODEL_PATH, 'rb'))
+		obj = pkl.load(open(MODEL_PATH, 'rb'))
+		return (obj['model'],obj['error'])
 
 	def retrain_model():
 		runpy.run_path(RETRAIN_PATH)	

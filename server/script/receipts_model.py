@@ -108,10 +108,10 @@ if(os.path.exists(fakedata_file)):
 print(len(labels), len(features))
 
 reg = LinearRegression().fit(features,labels)
-print('Score: ' + reg.score(features, labels))
+print('Score: ' + str(reg.score(features, labels)))
 predictions = reg.predict(features)
 rmse = np.sqrt(mean_squared_error(labels, predictions))
-print('RMS Error: ' + rmse)
+print('RMS Error: ' + str(rmse))
 
 model_file = 'bin/receipts_model.pkl'
 

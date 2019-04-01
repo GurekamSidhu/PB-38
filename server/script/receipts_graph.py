@@ -19,7 +19,7 @@ import tkinter as tk
 from tkinter import ttk
 
 
-with open('../receipts_schema.json','r') as schemafile:
+with open('receipts_schema.json','r') as schemafile:
     schema = json.loads(schemafile.read())
 
 def row_complete(row):
@@ -109,9 +109,9 @@ class Grapher(tk.Frame):
         with open(home + '/dump/porton/receipts.bson','rb') as datafile:
             data = bson.decode_all(datafile.read())
 
-        runpy.run_path('./receipts_dict_gen.py')
+        runpy.run_path('script/receipts_dict_gen.py')
 
-        with open('../bin/receipts_dict.json', 'r') as dictfile:
+        with open('bin/receipts_dict.json', 'r') as dictfile:
             dicts = json.loads(dictfile.read())
 
         features = []
