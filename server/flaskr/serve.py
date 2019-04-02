@@ -1,37 +1,49 @@
+import os
 import click
 import functools
 
 from flask import Flask, Blueprint, flash, request, render_template
 from flask.cli import with_appcontext
 
-# For forms
 from flask_wtf import Form
 from wtforms import IntegerField, SelectField, SubmitField
 from wtforms.validators import NumberRange, InputRequired
 import requests
 import json
+import bson
+
+SFILE_PATH = os.getenv("HOME") + '/dump/porton/services.bson'
+FEATURES_PATH = 'bin/receipts_dict.json'
 
 # Add blueprint
 app_blueprint = Blueprint('app', __name__, url_prefix='')
 
 class TraitsForm(Form):
 	''' Event parameters form '''
-	speciality_types = ['Cardiology', 'Neurology', 'Dermatology', 'Clinical Genetics and Genomics', 'Pulmonology', 'Anesthesiology', 'Allergy and Immunology', 'Aerospace Medicine', 'Clinical Counselling', 'Family Medicine/General Practitioner', 'Plastic Surgery', 'Pediatrics']
-	event_types = ['Video', 'Report', 'Voice']
-	visit_types = ['Counselling Video', 'Consultation Video', 'Consultation Report', 'Consultation Email', 'Counselling Email', 'Counselling Voice']
-	# visit_types = ['Counselling Video', 'Consultation Video', 'Consultation Report', 'Consultation Email', 'Counselling Email', 'Counselling Voice', 'Consultation Voice', 'Counselling Report']
+	with open(SFILE_PATH, 'rb') as sfile:
+		services = bson.decode_all(sfile.read())
 
+	with open(FEATURES_PATH, 'r') as rfile:
+		featureslist = json.loads(rfile.read())
+	
+	speciality_types = featureslist['specialty']
+	event_types = featureslist['eventType']
+	visit_types = featureslist['type']
+	
 	specialities = []
 	events = []
 	visits = []
-	for i in range(0, len(speciality_types)):
-		specialities.append((i + 1, speciality_types[i]))
+	
+	for key, value in speciality_types.items():
+		specialities.append((value, key))
 
-	for i in range(0, len(event_types)):
-		events.append((i + 1, event_types[i]))
+	for key, value in event_types.items():
+		events.append((value, key))
 
-	for i in range (0, len(visit_types)):
-		visits.append((i + 1, visit_types[i]))
+	for service in services:
+		service_id = service['_id']
+		if service_id in visit_types.keys():
+			visits.append((visit_types[service_id], service['name']))		
 
 	duration 	= IntegerField('Duration(s)', validators=[InputRequired(),NumberRange(min=1)])				# Must be greater than 0
 	speciality 	= SelectField('Speciality',coerce=int, choices=specialities)	
