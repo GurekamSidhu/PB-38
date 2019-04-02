@@ -11,15 +11,15 @@ python manage.py run <dev|test|prod>
 #### Retrain Model
 Title | Retrain Model
 ---|---
-URL | GET api/retrain
+URL | *GET* api/retrain
 Authorization | Admin access only.
 Success Response | Code: 200 OK </br> Content: ``` {'status': 'Success', 'message':"Successfully retrained model."} ```
 Error Response | Code: 401 UNAUTHORIZED </br> Content: ``` { "status":"Failure", "message":<error message> }```
 
 #### Query price
-Title | Retrain Model
+Title | Get Predicted Price
 ---|---
-URL | GET api/calculate
+URL | *GET* api/calculate
 Authorization | User/Admin access only
 URL Params | Required: </br> `duration=[integer]` duration of visit in seconds </br> `speciality=[integer]` speciality of practitioner </br> `eventType=[integer]` Voice/Video/Report </br> `type=[integer]`Counseling/Consultation
 Success Response | Code: 200 OK </br> Content: ``` {"status":"Success", "message":"Successful price generation.", "data":{"price":<price>}}```
