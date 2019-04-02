@@ -9,83 +9,22 @@ python manage.py run <dev|test|prod>
 
 ### Endpoints
 #### Retrain Model
-To retrain the price predicting model:
-- NEED ADMIN ACCESS (see authorization below)
-
-`GET /api/retrain`
-
-**Response:**
-
-Success:
-
-Status Code:
-
-	- 200 OK
-
-Data:
-```
-{
-	'status':'Success',
-	'message': <message>
-}
-```
-
-Error:
-
-Status Code:
-
-	- 401 UNAUTHORIZED
-	- 501 INTERNAL FAILURE
-
-Data:
-```
-{
-	'status':'Failure',
-	'message' <message>
-}
-```
+Title | Retrain Model
+---|---
+URL | GET api/retrain
+Authorization | Admin access only.
+Success Response | Code: 200 OK </br> Content: ``` {'status': 'Success', 'message':"Successfully retrained model."} ```
+Error Response | Code: 401 UNAUTHORIZED </br> Content: ``` { "status":"Failure", "message":<error message> }```
 
 #### Query price
-- NEED USER ACCESS (see authorization below)
+Title | Retrain Model
+---|---
+URL | GET api/calculate
+Authorization | User/Admin access only
+URL Params | Required: </br> `duration=[integer]` duration of visit in seconds </br> `speciality=[integer]` speciality of practitioner </br> `eventType=[integer]` Voice/Video/Report </br> `type=[integer]`Counseling/Consultation
+Success Response | Code: 200 OK </br> Content: ``` {"status":"Success", "message":"Successful price generation.", "data":{"price":<price>}}```
+Error Response | Code: 401 UNAUTHORIZED </br> Content: ``` { "status":"Failure", "message":<error message> }``` </br> Code: 400 BAD REQUEST </br> Content: ``` { "status":"Failure", "message":<error message> }```
 
-`GET /api/calculate?`
-
-URL Parameters:
-- `duration=[integer]` (required)
-- `speciality=[integer]` (required)
-- `eventType=[integer]` (required)
-- `type=[integer]` (required)
-
-**Response:**
-
-Success:
-
-Status Code:
-
-	- 200 OK
-
-Data:
-```
-{
-	'status': 'Success',
-	'message': <message>
-}
-```
-
-Error:
-
-Status Code:
-
-	- 401 UNAUTHORIZED
-	- 501 INTERNAL FAILURE
-
-Data:
-```
-{
-	'status': 'Failure',
-	'message': <message>
-}
-```
 #### Authentication
 To access endpoints, use Basic HTTP Authentication and tokens below.
 
