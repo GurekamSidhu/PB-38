@@ -86,9 +86,9 @@ class Price(Resource):
 		''' Parse and validate request parameters '''
 		request_args = {
 			"duration" : fields.Int(validate=lambda val: val > 0),
-			"speciality" : fields.Int(validate=lambda val: val > 0),
-			"eventType" : fields.Int(validate=lambda val: val > 0),
-			"type" : fields.Int(validate=lambda val: val > 0),
+			"speciality" : fields.Int(validate=lambda val: val >= 0),
+			"eventType" : fields.Int(validate=lambda val: val >= 0),
+			"type" : fields.Int(validate=lambda val: val >= 0),
 		}
 		return parser.parse(request_args, data)
 		
