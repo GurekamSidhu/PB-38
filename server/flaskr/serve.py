@@ -55,6 +55,10 @@ def getPrice():
 			flash("Invalid Input")
 			return render_template('entertraits.html', form=form)
 		data = {'duration': form_data['duration'], 'speciality' : form_data['speciality'], 'eventType' : form_data['event_type'], 'type': form_data['visit_type']}
-		r = requests.get(request.base_url + 'api/calculate', params=data)
-		price = json.loads(r.text)['price']
-		return render_template('showprice.html', price=price)
+		header = {'Authorization':'Basic 6b93ccba414ac1d0ae1e77f3fac560c748a6701ed6946735a49d463351518e16'}
+		r = requests.get(request.base_url + 'api/calculate', params=data, headers=header)
+		price = '{:.2f}'.format(json.loads(r.text)['data']['price'])
+		error = '{:.2f}'.format(json.loads(r.text)['data']['error'])
+		# price = {:.2f}.format(price)
+		# error = 
+		return render_template('showprice.html', price=price, error=error)
