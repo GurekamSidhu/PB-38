@@ -16,10 +16,11 @@ app_blueprint = Blueprint('app', __name__, url_prefix='')
 
 class TraitsForm(Form):
 	''' Event parameters form '''
-	speciality_types = ['Neurology', 'Pulmonology', 'Family Medicine', 'Clinical Genetics and Genomics', 'Clinical Counselling', 'Plastic Surgery', 'Anesthesiology', 'Pediatrics', 'Allergy and Immunology', 'Aerospace Medicine', 'Dermatology', 'Cardiology', 'None']
+	speciality_types = ['Cardiology', 'Neurology', 'Dermatology', 'Clinical Genetics and Genomics', 'Pulmonology', 'Anesthesiology', 'Allergy and Immunology', 'Aerospace Medicine', 'Clinical Counselling', 'Family Medicine/General Practitioner', 'Plastic Surgery', 'Pediatrics']
 	event_types = ['Video', 'Report', 'Voice']
-	visit_types = ['Counseling Video', 'Consulatation Video', 'Consulatation Report', 'Consultation Email', 'Conseling Email', 'Conseling Voice', 'Consultation Voice', 'Conseling Report']
-	
+	visit_types = ['Counselling Video', 'Consultation Video', 'Consultation Report', 'Consultation Email', 'Counselling Email', 'Counselling Voice']
+	# visit_types = ['Counselling Video', 'Consultation Video', 'Consultation Report', 'Consultation Email', 'Counselling Email', 'Counselling Voice', 'Consultation Voice', 'Counselling Report']
+
 	specialities = []
 	events = []
 	visits = []
@@ -32,7 +33,7 @@ class TraitsForm(Form):
 	for i in range (0, len(visit_types)):
 		visits.append((i + 1, visit_types[i]))
 
-	duration 	= IntegerField('Duration', validators=[InputRequired(),NumberRange(min=1)])				# Must be greater than 0
+	duration 	= IntegerField('Duration(s)', validators=[InputRequired(),NumberRange(min=1)])				# Must be greater than 0
 	speciality 	= SelectField('Speciality',coerce=int, choices=specialities)	
 	event_type 	= SelectField('Event Type',coerce=int, choices=events)
 	visit_type 	= SelectField('Visit Type',coerce=int, choices=visits)
@@ -46,19 +47,22 @@ def getPrice():
 	form=TraitsForm(csrf_enabled=False)
 	if request.method == 'GET':
 		'''Render form to input visit details'''
-		return render_template('entertraits.html', form=form)
+		return render_template('index.html', form=form)
 	
 	if request.method == 'POST':
 		'''Request price for given details'''
 		form_data = request.form
 		if form.validate_on_submit() == False:
 			flash("Invalid Input")
-			return render_template('entertraits.html', form=form)
+			return render_template('index.html', form=form)
 		data = {'duration': form_data['duration'], 'speciality' : form_data['speciality'], 'eventType' : form_data['event_type'], 'type': form_data['visit_type']}
-		header = {'Authorization':'Basic 6b93ccba414ac1d0ae1e77f3fac560c748a6701ed6946735a49d463351518e16'}
-		r = requests.get(request.base_url + 'api/calculate', params=data, headers=header)
-		price = '{:.2f}'.format(json.loads(r.text)['data']['price'])
-		error = '{:.2f}'.format(json.loads(r.text)['data']['error'])
-		# price = {:.2f}.format(price)
-		# error = 
-		return render_template('showprice.html', price=price, error=error)
+		headers = {
+			'Authorization': 'Basic 6b93ccba414ac1d0ae1e77f3fac560c748a6701ed6946735a49d463351518e16'
+		}
+		r = requests.get(request.base_url + 'api/calculate', headers=headers, params=data)
+		if r.status_code == requests.codes.ok:
+			price = json.loads(r.text)['data']['price']
+			error = json.loads(r.text)['data']['error']
+			return render_template('index.html', price=price, error=error)
+		else:
+			return 'error'

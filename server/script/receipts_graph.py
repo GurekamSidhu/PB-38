@@ -302,5 +302,3 @@ root = tk.Tk()
 root.geometry("600x650")
 app = Grapher(root)
 root.mainloop()
-
-

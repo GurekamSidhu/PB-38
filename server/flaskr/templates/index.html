@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+{% block content %}
+<div class="wrapper">
+	<div class="card">
+		{% if price is defined %}
+			<!-- Show price -->
+			<div class="nav">	
+				<a href="{{url_for('app.getPrice')}}"><button type="button" class="btn-nav btn" aria-label="Back Arrow">
+					<span class="glyphicon glyphicon-menu-left" aria-hidden="True"></span>
+				</button></a>
+			</div>
+			<div class="output">
+				<h3>Calculated Price: {{"$%.2f" | format(price)}}</h3>
+				<p> Range: +/- {{"$%.2f" | format(error)}} </p>
+			</div>
+		{% else %}
+			<!-- Render form -->
+			<div class="input-form">
+				<h3>Enter visit details:</h3>
+				{{ wtf.quick_form(form, method="post", button_map={"submit":"submit btn-block"}) }}
+			</div>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}
