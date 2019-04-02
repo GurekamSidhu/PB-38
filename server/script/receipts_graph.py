@@ -19,7 +19,7 @@ import tkinter as tk
 from tkinter import ttk
 
 
-with open('receipts_schema.json','r') as schemafile:
+with open('../receipts_schema.json','r') as schemafile:
     schema = json.loads(schemafile.read())
 
 def row_complete(row):
@@ -106,12 +106,12 @@ class Grapher(tk.Frame):
         random.seed()
         home = os.getenv("HOME")
 
-        with open(home + '/dump/porton/receipts.bson','rb') as datafile:
+        with open('../../../dump/porton/receipts.bson','rb') as datafile:
             data = bson.decode_all(datafile.read())
 
-        runpy.run_path('script/receipts_dict_gen.py')
+        runpy.run_path('../script/receipts_dict_gen.py')
 
-        with open('bin/receipts_dict.json', 'r') as dictfile:
+        with open('../bin/receipts_dict.json', 'r') as dictfile:
             dicts = json.loads(dictfile.read())
 
         features = []
@@ -283,10 +283,6 @@ class Grapher(tk.Frame):
                 ax.plot(feature_vectors[datatype],p(feature_vectors[datatype]),"k--")
                 self.feature_figs[datatype] = fig
 
-        print(reg.coef_)
-        print(self.feature_coef)
-        su = 0
-        #print(self.feature_coef)
         self.model_fig, ax = plt.subplots()
         ax.scatter(labels, predictions)
         ax.plot([labels.min(), labels.max()], [labels.min(), labels.max()], 'k--', lw=3)

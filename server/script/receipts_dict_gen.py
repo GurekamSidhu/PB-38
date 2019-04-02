@@ -7,8 +7,12 @@ home = os.getenv("HOME")
 with open(home + '/dump/porton/receipts.bson', 'rb') as receiptsfile:
     receipts = bson.decode_all(receiptsfile.read())
 
-with open('receipts_schema.json','r') as schemafile:
-    schema = json.loads(schemafile.read())
+try:
+    with open('receipts_schema.json','r') as schemafile:
+        schema = json.loads(schemafile.read())
+except:
+    with open('../receipts_schema.json','r') as schemafile:
+        schema = json.loads(schemafile.read())
 
 dicts = {}
 
@@ -24,5 +28,9 @@ for row in receipts:
 
 jsontxt = json.dumps(dicts)
 
-with open('bin/receipts_dict.json', 'w') as file:
-    file.write(jsontxt)
+try:
+    with open('bin/receipts_dict.json', 'w') as file:
+        file.write(jsontxt)
+except:
+    with open('../bin/receipts_dict.json', 'w') as file:
+        file.write(jsontxt)
