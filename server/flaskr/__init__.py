@@ -12,7 +12,7 @@ def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_by_name[config_name])    
 
-    app.model, app.error = PriceModel.load_model_and_error()
+    app.model, app.score, app.error = PriceModel.load_model()
 
     bootstrap = Bootstrap(app)
 

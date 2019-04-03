@@ -22,8 +22,31 @@ users = {
 """
 API ENDPOINTS
 """
-class Retrain(Resource):
+class PredictiveModel(Resource):
 	def get(self):
+		auth_header = request.headers.get('Authorization')
+		if auth_header is None:
+			response = {
+				'status':'Failure',
+				'message': 'Invalid Access.  Please provide token.'
+			}
+			return response, 401
+		if authenticate(auth_header) == False:
+			response = {
+				'status': 'Failure',
+				'message': 'Invalid Token.'
+			}		
+		if current_app.model is not None:
+			response =  {
+				'status':'Success',
+				'message':'Data retreived.',
+				'data': {
+						'score': current_app.score,
+						'error': current_app.error
+					}
+			}
+			return response, 200
+	def post(self):
 		''' Retrains the model'''
 		auth_header = request.headers.get('Authorization')
 		if auth_header is None:
@@ -40,7 +63,7 @@ class Retrain(Resource):
 			}
 			return response, 401
 		PriceModel.retrain_model()
-		current_app.model,current_app.error = PriceModel.load_model_and_error()		
+		current_app.model, current_app.score, current_app.error = PriceModel.load_model()		
 		if current_app.model is not None:
 			return {
 				'status':'Success',
@@ -121,7 +144,7 @@ class Price(Resource):
 		return current_app.model.predict(features)
 
 
-api.add_resource(Retrain, '/retrain')
+api.add_resource(PredictiveModel, '/model')
 api.add_resource(Price, '/calculate')
 
 

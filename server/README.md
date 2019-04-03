@@ -11,7 +11,10 @@ python manage.py run <dev|test|prod>
 #### Retrain Model
 Title | Retrain Model
 ---|---
-URL | *GET* api/retrain
+URL | *GET* api/model
+Authorization | User/Admin accss only
+Success Response | *TODO: ADD*
+URL | *POST* api/model
 Authorization | Admin access only.
 Success Response | Code: 200 OK </br> Content: ``` {'status': 'Success', 'message':"Successfully retrained model."} ```
 Error Response | Code: 401 UNAUTHORIZED </br> Content: ``` { "status":"Failure", "message":<error message> }```
