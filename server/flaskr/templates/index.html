@@ -5,7 +5,7 @@
 {% block content %}
 <div class="wrapper">
 	<div class="card">
-		{% if price is defined %}
+		{% if data is defined %}
 			<!-- Show price -->
 			<div class="nav">	
 				<a href="{{url_for('app.getPrice')}}"><button type="button" class="btn-nav btn" aria-label="Back Arrow">
@@ -13,8 +13,12 @@
 				</button></a>
 			</div>
 			<div class="output">
-				<h3>Calculated Price: {{"$%.2f" | format(price)}}</h3>
-				<p> Range: +/- {{"$%.2f" | format(error)}} </p>
+				{% if success is sameas true %}
+					<h3>Calculated Price: {{"$%.2f" | format(data.price)}}</h3>
+					<p> Range: +/- {{"$%.2f" | format(data.error)}} </p>
+				{% else %}
+					<p> Error: Could not predict price.  Please try again.</p>
+				{% endif %}
 			</div>
 		{% else %}
 			<!-- Render form -->

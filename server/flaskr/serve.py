@@ -73,8 +73,9 @@ def getPrice():
 		}
 		r = requests.get(request.base_url + 'api/calculate', headers=headers, params=data)
 		if r.status_code == requests.codes.ok:
-			price = json.loads(r.text)['data']['price']
-			error = json.loads(r.text)['data']['error']
-			return render_template('index.html', price=price, error=error)
+			data = {}
+			data['price'] = json.loads(r.text)['data']['price']
+			data['error'] = json.loads(r.text)['data']['error']
+			return render_template('index.html', success=True, data=data)
 		else:
-			return 'error'
+			return render_template('index.html', success=False, data={})
