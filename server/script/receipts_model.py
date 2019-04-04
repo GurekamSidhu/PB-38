@@ -108,6 +108,7 @@ if(os.path.exists(fakedata_file)):
 print(len(labels), len(features))
 
 reg = LinearRegression().fit(features,labels)
+score = reg.score(features, labels)
 print('Score: ' + str(reg.score(features, labels)))
 predictions = reg.predict(features)
 rmse = np.sqrt(mean_squared_error(labels, predictions))
@@ -118,6 +119,7 @@ model_file = 'bin/receipts_model.pkl'
 with open(model_file, 'wb') as dumpfile:
     obj = {
         'model': reg,
+	'score': score,
         'error': rmse
     }
     pkl.dump(obj, dumpfile)
