@@ -15,7 +15,7 @@ matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
 
-import tkinter as tk
+import tkinter as tk 
 from tkinter import ttk
 
 
@@ -106,10 +106,10 @@ class Grapher(tk.Frame):
         random.seed()
         home = os.getenv("HOME")
 
-        with open('../../../dump/porton/receipts.bson','rb') as datafile:
+        with open(home + '/dump/porton/receipts.bson','rb') as datafile:
             data = bson.decode_all(datafile.read())
 
-        runpy.run_path('../script/receipts_dict_gen.py')
+        #runpy.run_path('../script/receipts_dict_gen.py')
 
         with open('../bin/receipts_dict.json', 'r') as dictfile:
             dicts = json.loads(dictfile.read())
@@ -225,7 +225,9 @@ class Grapher(tk.Frame):
         ax.set_ylabel('Price')
         ax.set_title('Duration')
         self.feature_coef['duration'] = reg.coef_[feature_coef_pos['duration']]
-                
+
+        print('Duration coefficient: ', self.feature_coef['duration'])
+
         z = np.polyfit(durations, prices, 1)
         self.durations_z = z
         p = np.poly1d(z)
@@ -259,6 +261,8 @@ class Grapher(tk.Frame):
                 rects3 = ax.bar(index + bar_width*2, self.feature_coef[datatype], bar_width,
                             alpha=opacity, color='r',
                             label='Coefficient (effect on price)')
+
+                print(datatype + ' coefficient: ', self.feature_coef[datatype])
                 
                 ax.set_xticks(index + bar_width / 2)
                 ax.set_title(datatype)
@@ -283,6 +287,7 @@ class Grapher(tk.Frame):
                 ax.plot(feature_vectors[datatype],p(feature_vectors[datatype]),"k--")
                 self.feature_figs[datatype] = fig
 
+
         self.model_fig, ax = plt.subplots()
         ax.scatter(labels, predictions)
         ax.plot([labels.min(), labels.max()], [labels.min(), labels.max()], 'k--', lw=3)
@@ -298,3 +303,5 @@ root = tk.Tk()
 root.geometry("600x650")
 app = Grapher(root)
 root.mainloop()
+
+
