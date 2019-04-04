@@ -63,7 +63,11 @@ class PredictiveModel(Resource):
 			}
 			return response, 401
 		PriceModel.retrain_model()
-		current_app.model, current_app.score, current_app.error = PriceModel.load_model()		
+		obj = PriceModel.load_model()
+	
+		current_app.model = obj.get('model', None)
+		current_app.score = obj.get('score', None)
+		current_app.error = obj.get('error', None)	
 		if current_app.model is not None:
 			return {
 				'status':'Success',
