@@ -14,8 +14,22 @@
 			</div>
 			<div class="output">
 				{% if success is sameas true %}
-					<h3>Calculated Price: {{"$%.2f" | format(data.price)}}</h3>
-					<p> Range: +/- {{"$%.2f" | format(data.error)}} </p>
+					<h3>Enter visit price:</h3>
+					<div class="pricing-block">
+						<label for="{{(data.price-data.error)|int}}" class="pull-left">${{(data.price-data.error)|int}}</label>
+						<label for="{{(data.price+data.error)|int}}" class="pull-right">${{(data.price+data.error)|int}}</label>
+						<input type="range" min={{(data.price - data.error)|int}} max={{(data.price + data.error)|int}} class="slider" id="price-range"></input>
+					</div>
+					<div class="pricing-block">
+						<form>
+						<div class="form-group row">
+							<label for="price" class="col-sm-4 col-form-label">Visit Price</label>
+							<div class="col-sm-8"><input type="price" class="form-control" id="price"></input></div>
+									
+						</div>
+						<button type="button" class="btn-submit btn-block btn">Create Visit</button>
+						</form>
+					</div>
 				{% else %}
 					<p> Error: Could not predict price.  Please try again.</p>
 				{% endif %}
@@ -29,4 +43,14 @@
 		{% endif %}
 	</div>
 </div>
+
+<script>
+var slider = document.getElementById("price-range")
+var price = document.getElementById("price")
+price.value = slider.value;
+
+slider.oninput = function () {
+	price.value = this.value;
+}
+</script>
 {% endblock %}
