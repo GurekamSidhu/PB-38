@@ -1,10 +1,17 @@
 ## Server
 
 ### To Run
-To start server at `localhost:3000`
+To start server at `http://localhost:5000`
 ```
 python manage.py run <dev|test|prod>
 ```
+
+### To run on HTTPS
+```
+export PATH_TO_CERTIFICATE=<path_to_ssl_certificate>
+export PATH_TO_KEY=<path_to_ssl_key>
+```
+Start server to access on `https://localhost:5000`
 
 
 ### Endpoints
