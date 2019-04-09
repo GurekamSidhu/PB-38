@@ -4,14 +4,22 @@ import unittest
 from flask_script import Manager
 from flaskr import create_app
 
-app = create_app('dev')
+app = create_app(os.environ.get("FLASK_ENV", default="dev"))
 app.app_context().push()
 
 manager = Manager(app)
 
 @manager.command
 def run():
-    app.run()
+    "Run the server"
+    # get ssl cert and key
+    CERT_FILE = os.environ.get("PATH_TO_CERTIFICATE", default=None)
+    KEY_FILE = os.environ.get("PATH_TO_KEY", default=None)
+    
+    if CERT_FILE is not None and KEY_FILE is not None:
+    	app.run(ssl_context=('cert.pem', 'key.pem'))
+    else:
+        app.run()
 
 @manager.command
 def test():

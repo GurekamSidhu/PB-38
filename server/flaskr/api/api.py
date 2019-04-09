@@ -148,8 +148,8 @@ class Price(Resource):
 		return current_app.model.predict(features)
 
 
-api.add_resource(PredictiveModel, '/model')
-api.add_resource(Price, '/calculate')
+api.add_resource(PredictiveModel, '/model', endpoint='model')
+api.add_resource(Price, '/calculate', endpoint='price')
 
 
 @parser.error_handler

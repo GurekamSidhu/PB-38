@@ -2,7 +2,7 @@ import os
 import click
 import functools
 
-from flask import Flask, Blueprint, flash, request, render_template
+from flask import Flask, Blueprint, flash, request, url_for, render_template
 from flask.cli import with_appcontext
 
 from flask_wtf import Form
@@ -12,6 +12,7 @@ import requests
 import json
 import bson
 
+#SFILE_PATH='data/services.bson'
 SFILE_PATH = os.getenv("HOME") + '/dump/porton/services.bson'
 FEATURES_PATH = 'bin/receipts_dict.json'
 
@@ -71,7 +72,8 @@ def getPrice():
 		headers = {
 			'Authorization': 'Basic 6b93ccba414ac1d0ae1e77f3fac560c748a6701ed6946735a49d463351518e16'
 		}
-		r = requests.get(request.base_url + 'api/calculate', headers=headers, params=data)
+		price_url = url_for('api.price', _external=True)
+		r = requests.get(price_url, headers=headers, params=data, verify=False)
 		if r.status_code == requests.codes.ok:
 			data = {}
 			data['price'] = json.loads(r.text)['data']['price']
